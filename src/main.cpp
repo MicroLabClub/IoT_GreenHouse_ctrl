@@ -4,89 +4,109 @@
 #include "lib_cond/lib_cond.h"
 #include "dd_relay/dd_relay.h"
 #include "dd_servo/dd_servo.h"
-
-#define SYS_TICK 100
+#include "dd_encoder/dd_encoder.h"
 
 void setup()
 {
   // put your setup code here, to run once:
   Serial.begin(9600);
+  Serial.println("IoT System started");
   //  Initialize device.
-  dd_dht_setup();
-  dd_relay_setup();
-  dd_servo_setup();
+  // dd_dht_setup();
+  // dd_relay_setup();
+  // dd_servo_setup();
+  dd_encoder_setup();
 }
 
-#define INPUT_BUFF_SIZE 8
-float temp_buff_in[INPUT_BUFF_SIZE];
-#define MEDIAN_BUFF_SIZE 5
-float temp_buff_med[MEDIAN_BUFF_SIZE];
+#define SYS_TICK 1
 
-#define LPF_BUFF_SIZE 4
-float temp_buff_lpf[LPF_BUFF_SIZE];
+#define DD_DHT_REC 100 / SYS_TICK
+int dd_dht_rec_cnt = DD_DHT_REC;
 
-float temp_weights_lpf[LPF_BUFF_SIZE] =
-    {50, 25, 15, 10};
+#define DD_SERVO_REC 100 / SYS_TICK
+
+#define DD_ENCODER_REC 50 / SYS_TICK
+int dd_encoder_rec_cnt = DD_ENCODER_REC;
+
+#define REPORT_REC 1000 / SYS_TICK
+int report_rec_cnt = REPORT_REC;
+
+#define SRV_CTRL_TEMP_REC 500 / SYS_TICK
+int srv_ctrl_tem_rec_cnt = SRV_CTRL_TEMP_REC;
 
 void loop()
 {
   // put your main code here, to run repeatedly:
   // dd_dht_loop();
-  dd_servo_loop();
-
-  // servo report
-  int servo_current = dd_servo_get_current();
-  Serial.print(" Servo current: ");
-  Serial.println(servo_current);
-
-  int servo_target = dd_servo_get_target();
-  Serial.print(" Servo target: ");
-  Serial.println(servo_target);
-
-  if (dd_dht_GetTemperatureError() == 10)
+  // dd_servo_loop();
+  if (--dd_dht_rec_cnt <= 0)
   {
-    float temp = dd_dht_GetTemperature();
-    Serial.print(F("Temperature: "));
-    Serial.print(temp);
-    Serial.println(F("°C"));
-
-    // 1. FILTRU MEDIAN
-    // 1.1. coletam fluxul de intrare in bufer FIFO
-    fifo_push(temp, temp_buff_in, INPUT_BUFF_SIZE);
-    print_buff(temp_buff_in, INPUT_BUFF_SIZE);
-
-    // 1.2. luam o copie din buferul de intrare
-    buf_copy(temp_buff_in, temp_buff_med, MEDIAN_BUFF_SIZE);
-    print_buff(temp_buff_med, MEDIAN_BUFF_SIZE);
-
-    // 1.3. sortam copia
-    buf_sort(temp_buff_med, MEDIAN_BUFF_SIZE);
-    print_buff(temp_buff_med, MEDIAN_BUFF_SIZE);
-
-    // 1.4. extragem mediana
-    float temp_median = temp_buff_med[MEDIAN_BUFF_SIZE / 2];
-
-    // raportam valoarea mediana
-    Serial.print(F("Temperature MEDIAN: "));
-    Serial.print(temp_median);
-    Serial.println(F("°C"));
-
-    // 1. FILTRU TRECE JOS (media ponderata)
-    // 1.1. coletam fluxul de intrare in bufer FIFO
-    fifo_push(temp_median, temp_buff_lpf, LPF_BUFF_SIZE);
-    print_buff(temp_buff_lpf, LPF_BUFF_SIZE);
-
-    // 1.2 evaluam media ponderata
-    float temp_flt = buf_wavg(temp_buff_lpf, temp_weights_lpf, LPF_BUFF_SIZE);
-
-    // raportam valoarea filtrata
-    Serial.print(F("Temperature FTJ: "));
-    Serial.print(temp_flt);
-    Serial.println(F("°C"));
+    dd_dht_loop();
+    dd_dht_rec_cnt = DD_ENCODER_REC;
   }
-  else
+
+  if (--dd_encoder_rec_cnt <= 0)
+  { // pentru setpoint
+    dd_encoder_loop();
+    dd_encoder_rec_cnt = DD_ENCODER_REC;
+  }
+
+  if (--srv_ctrl_tem_rec_cnt <= 0)
+  { // pentru setpoint
+    srv_ctrl_tem_rec_cnt = SRV_CTRL_TEMP_REC;
+
+#define TEMP_HISTERESIS (0.5)
+
+    float temp_current = dd_dht_GetTemperature();
+    int enc_counter = dd_encoder_get_counter();
+    float temp_setpoint = enc_counter * 0.5;
+
+    int temp_off = temp_setpoint + TEMP_HISTERESIS;
+    int temp_on = temp_setpoint - TEMP_HISTERESIS;
+
+    // ON OFF Control cu Histereza
+
+    if (temp_current > temp_off)
+    {
+      // relay off
+      dd_relay_off();
+      Serial.println("relay ON");
+    }
+    else if (temp_current < temp_on){
+      // relay on
+      dd_relay_on();
+            Serial.println("relay OFF");
+
+    } else{
+      // do nothing
+    }
+
+  }
+
+  if (--report_rec_cnt <= 0)
   {
-    // Serial.println(F("Error reading temperature!"));
+    report_rec_cnt = REPORT_REC;
+
+    int enc_counter = dd_encoder_get_counter();
+    Serial.print("Position: ");
+    Serial.println(enc_counter);
+
+    if (dd_dht_GetTemperatureError() == 0)
+    {
+      float temp = dd_dht_GetTemperature();
+      Serial.print(F("Temperature: "));
+      Serial.print(temp);
+      Serial.println(F("°C"));
+    }
+
+    // // servo report
+    // int servo_current = dd_servo_get_current();
+    // Serial.print(" Servo current: ");
+    // Serial.println(servo_current);
+
+    // int servo_target = dd_servo_get_target();
+    // Serial.print(" Servo target: ");
+    // Serial.println(servo_target);
   }
 
   if (Serial.available())
@@ -118,7 +138,7 @@ void loop()
       Serial.println(" DD_SERVO:  Close");
       break;
 
-    default:  
+    default:
       break;
     }
   }
