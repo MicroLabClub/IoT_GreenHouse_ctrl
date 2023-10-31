@@ -19,6 +19,15 @@
     return counter;
  }
 
+int  dd_encoder_set_counter(int cnt){
+    counter = cnt;
+    return counter;
+}
+int  dd_encoder_reset_counter(){
+    counter = dd_encoder_set_counter(0);
+    return counter;
+}
+
  void dd_encoder_setup() { 
    pinMode (outputA,INPUT);
    pinMode (outputB,INPUT);
