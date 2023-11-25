@@ -23,11 +23,11 @@ void srv_ctrl_temp_loop(){
       // ON OFF Control cu Histereza
       if (temp_current > temp_off)
       {
-        dd_relay_off();
+        dd_relay_off(DD_RELAY_1_PIN);
       }
       else if (temp_current < temp_on)
       {
-        dd_relay_on();
+        dd_relay_on(DD_RELAY_1_PIN);
       }
       else
       {
@@ -36,7 +36,7 @@ void srv_ctrl_temp_loop(){
     }
     else
     {
-      dd_relay_off();
+      dd_relay_off(DD_RELAY_1_PIN);
     }
 
 }

@@ -109,16 +109,16 @@ void dd_dht_loop()
   dht.temperature().getEvent(&event);
   if (isnan(event.temperature))
   {
-    // Serial.println(F("Error reading temperature!"));
+    Serial.println(F("Error reading temperature!"));
     temperature_error = 1;
   }
   else
   {
     temperature_error = 0;
     float temp_raw = event.temperature;
-    // Serial.print(F("Temperature: "));
-    // Serial.print(temp_raw);
-    // Serial.println(F("°C"));
+    Serial.print(F("Temperature: "));
+    Serial.print(temp_raw);
+    Serial.println(F("°C"));
 
     // 1. FILTRU MEDIAN
     // 1.1. coletam fluxul de intrare in bufer FIFO
