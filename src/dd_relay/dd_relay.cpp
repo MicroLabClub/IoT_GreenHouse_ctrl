@@ -12,14 +12,24 @@ void dd_relay_setup()
         size_t relay_pin = dd_relay_pin[relay_it];
         pinMode(relay_pin, OUTPUT);
         dd_relay_off(relay_it);
-
     }
+}
 
+void dd_relay_loop()
+{
+
+    for (size_t relay_it = 0; relay_it < DD_RELAY_NR_OF; relay_it++)
+    {
+        uint8_t state = dd_relay_state[relay_it];
+        size_t pin_nr = dd_relay_pin[relay_it];
+
+        digitalWrite(pin_nr, state);
+    }
 }
 
 int dd_relay_on(size_t relay_it)
 {
-    int state = dd_relay_setState(relay_it,DD_RELAY_ON);
+    int state = dd_relay_setState(relay_it, DD_RELAY_ON);
     return state;
 }
 
@@ -37,7 +47,5 @@ int dd_relay_getState(size_t relay_it)
 int dd_relay_setState(size_t relay_it, int state)
 {
     dd_relay_state[relay_it] = state;
-    size_t pin_nr = dd_relay_pin[relay_it];
-    digitalWrite(pin_nr, state);
     return dd_relay_state[relay_it];
 }
