@@ -76,8 +76,8 @@ void srv_ctrl_temp_vent_loop()
       float temp_current = dd_dht_GetTemperature();
 
 
-      int temp_open = temp_setpoint + TEMP_VENT_HISTERESIS;
-      int temp_close = temp_setpoint - TEMP_VENT_HISTERESIS;
+      int temp_open = srv_ctrl_temp_vent_setpoint + TEMP_VENT_HISTERESIS;
+      int temp_close = srv_ctrl_temp_vent_setpoint - TEMP_VENT_HISTERESIS;
 
       // OPEN/CLOSE Control cu Histereza
       if (temp_current > temp_open)
