@@ -3,7 +3,13 @@
 #include "Arduino.h"
 
 int dd_relay_state[DD_RELAY_NR_OF];
-int dd_relay_pin[DD_RELAY_NR_OF] = {DD_RELAY_1_PIN, DD_RELAY_2_PIN};
+int dd_relay_pin[DD_RELAY_NR_OF] = {
+    DD_RELAY_1_PIN, 
+    DD_RELAY_2_PIN,
+    DD_RELAY_3_PIN,
+    DD_RELAY_4_PIN,
+    DD_RELAY_5_PIN
+     };
 
 void dd_relay_setup()
 {

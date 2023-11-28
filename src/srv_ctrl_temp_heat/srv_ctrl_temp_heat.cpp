@@ -7,6 +7,8 @@ void srv_ctrl_temp_heat_setup()
 {
 }
 
+float temp_setpoint = 19.0;
+
 void srv_ctrl_temp_heat_loop()
 {
 
@@ -14,8 +16,7 @@ void srv_ctrl_temp_heat_loop()
   {
 
     float temp_current = dd_dht_GetTemperature();
-    int enc_counter = dd_encoder_get_counter();
-    float temp_setpoint = (float)enc_counter * TEMP_HEAT_RESOLUTION;
+   
 
     int temp_off = temp_setpoint + TEMP_HEAT_HISTERESIS;
     int temp_on = temp_setpoint - TEMP_HEAT_HISTERESIS;
