@@ -9,7 +9,7 @@
 
 #include <Arduino.h>
 
-#include "dd_dht.h"
+#include "ed_dht.h"
 
 #include <Adafruit_Sensor.h>
 #include <DHT.h>
@@ -38,22 +38,22 @@ int temperature_error = 0;
 float humidity = 0;
 int humidity_error = 0;
 
-float dd_dht_GetTemperature(void)
+float ed_dht_GetTemperature(void)
 {
   return temperature;
 }
 
-float dd_dht_GetHumidity(void)
+float ed_dht_GetHumidity(void)
 {
   return humidity;
 }
 
-int dd_dht_GetTemperatureError(void)
+int ed_dht_GetTemperatureError(void)
 {
   return temperature_error;
 }
 
-int dd_dht_GetHumidityError(void)
+int ed_dht_GetHumidityError(void)
 {
   return humidity_error;
 }
@@ -72,7 +72,7 @@ float hum_buff_lpf[LPF_BUFF_SIZE];
 float temp_weights_lpf[LPF_BUFF_SIZE] = {50, 25, 15, 10};
 float hum_weights_lpf[LPF_BUFF_SIZE] = {50, 25, 15, 10};
 
-void dd_dht_setup()
+void ed_dht_setup()
 {
   // Serial.begin(9600);
   //  Initialize device.
@@ -104,10 +104,10 @@ void dd_dht_setup()
   delayMS = sensor.min_delay / 1000;
 }
 
-float dd_dht_temp_cond(float temp);
-float dd_dht_hum_cond(float temp);
+float ed_dht_temp_cond(float temp);
+float ed_dht_hum_cond(float temp);
 
-void dd_dht_loop()
+void ed_dht_loop()
 {
   // Delay between measurements.
   delay(delayMS);
@@ -130,7 +130,7 @@ void dd_dht_loop()
     Serial.print(temp_raw);
     Serial.println(F("°C"));
 
-    temperature = dd_dht_temp_cond(temp_raw);
+    temperature = ed_dht_temp_cond(temp_raw);
   }
 
   // Get humidity event and print its value.
@@ -149,11 +149,11 @@ void dd_dht_loop()
     Serial.print(hum_raw);
     Serial.println(F("%"));
 
-    humidity = dd_dht_temp_cond(hum_raw);
+    humidity = ed_dht_temp_cond(hum_raw);
   }
 }
 
-float dd_dht_temp_cond(float temp_raw)
+float ed_dht_temp_cond(float temp_raw)
 {
   // 1. FILTRU MEDIAN
   // 1.1. coletam fluxul de intrare in bufer FIFO
@@ -192,7 +192,7 @@ float dd_dht_temp_cond(float temp_raw)
   return temp_flt;
 }
 
-float dd_dht_hum_cond(float hum_raw)
+float ed_dht_hum_cond(float hum_raw)
 {
   // 1. FILTRU MEDIAN
   // 1.1. coletam fluxul de intrare in bufer FIFO

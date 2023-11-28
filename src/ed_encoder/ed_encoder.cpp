@@ -1,4 +1,4 @@
-#include "dd_encoder.h"
+#include "ed_encoder.h"
 #include "Arduino.h"
 
 
@@ -15,20 +15,20 @@
  int aState;
  int aLastState;  
 
- int  dd_encoder_get_counter(){
+ int  ed_encoder_get_counter(){
     return counter;
  }
 
-int  dd_encoder_set_counter(int cnt){
+int  ed_encoder_set_counter(int cnt){
     counter = cnt;
     return counter;
 }
-int  dd_encoder_reset_counter(){
-    counter = dd_encoder_set_counter(0);
+int  ed_encoder_reset_counter(){
+    counter = ed_encoder_set_counter(0);
     return counter;
 }
 
- void dd_encoder_setup() { 
+ void ed_encoder_setup() { 
    pinMode (outputA,INPUT);
    pinMode (outputB,INPUT);
    
@@ -37,7 +37,7 @@ int  dd_encoder_reset_counter(){
    aLastState = digitalRead(outputA);   
  } 
 
- void dd_encoder_loop() { 
+ void ed_encoder_loop() { 
    aState = digitalRead(outputA); // Reads the "current" state of the outputA
    // If the previous and the current state of the outputA are different, that means a Pulse has occured
    if (aState != aLastState){     

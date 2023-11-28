@@ -3,7 +3,7 @@
 #include "Arduino.h"
 
 int dd_lights_state;
-int dd_lights_relay = DD_RELAY_ID_3;
+int dd_lights_relay = ED_RELAY_ID_3;
 
 void dd_lights_setup()
 {
@@ -16,7 +16,7 @@ void dd_lights_loop()
     uint8_t state = dd_lights_state;
     size_t relay_id = dd_lights_relay;
 
-    dd_relay_setState(relay_id, state);
+    ed_relay_setState(relay_id, state);
 }
 
 int dd_lights_on()

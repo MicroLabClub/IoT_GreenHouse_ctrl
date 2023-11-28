@@ -1,21 +1,21 @@
-#include "srv_ctrl_temp_heat.h"
-#include "dd_dht/dd_dht.h"
+#include "ctrl_temp_heat.h"
+#include "ed_dht/ed_dht.h"
 #include "dd_heater/dd_heater.h"
-#include "dd_encoder/dd_encoder.h"
+#include "ed_encoder/ed_encoder.h"
 
-void srv_ctrl_temp_heat_setup()
+void ctrl_temp_heat_setup()
 {
 }
 
 float temp_setpoint = 19.0;
 
-void srv_ctrl_temp_heat_loop()
+void ctrl_temp_heat_loop()
 {
 
-  if (dd_dht_GetTemperatureError() == 0)
+  if (ed_dht_GetTemperatureError() == 0)
   {
 
-    float temp_current = dd_dht_GetTemperature();
+    float temp_current = ed_dht_GetTemperature();
    
 
     int temp_off = temp_setpoint + TEMP_HEAT_HISTERESIS;

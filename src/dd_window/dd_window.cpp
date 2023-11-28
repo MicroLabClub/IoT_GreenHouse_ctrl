@@ -1,8 +1,8 @@
 #include "dd_window.h"
-#include "dd_relay/dd_relay.h"
+#include "ed_relay/ed_relay.h"
 
-#define DD_WINDOW_ACT_POS_TERM DD_RELAY_ID_1
-#define DD_WINDOW_ACT_NEG_TERM DD_RELAY_ID_2
+#define DD_WINDOW_ACT_POS_TERM ED_RELAY_ID_1
+#define DD_WINDOW_ACT_NEG_TERM ED_RELAY_ID_2
 
 uint8_t dd_window_state = DD_WINDOW_STOP;
 uint32_t dd_window_op_cnt = 0;
@@ -29,19 +29,19 @@ void dd_window_loop()
     if (dd_window_state == DD_WINDOW_OPEN)
     {
 
-        dd_relay_on(DD_WINDOW_ACT_POS_TERM);
-        dd_relay_off(DD_WINDOW_ACT_NEG_TERM);
+        ed_relay_on(DD_WINDOW_ACT_POS_TERM);
+        ed_relay_off(DD_WINDOW_ACT_NEG_TERM);
     }
     else if (dd_window_state == DD_WINDOW_CLOSE)
     {
 
-        dd_relay_off(DD_WINDOW_ACT_POS_TERM);
-        dd_relay_on(DD_WINDOW_ACT_NEG_TERM);
+        ed_relay_off(DD_WINDOW_ACT_POS_TERM);
+        ed_relay_on(DD_WINDOW_ACT_NEG_TERM);
     }
     else
     { // stop
-        dd_relay_off(DD_WINDOW_ACT_POS_TERM);
-        dd_relay_off(DD_WINDOW_ACT_NEG_TERM);
+        ed_relay_off(DD_WINDOW_ACT_POS_TERM);
+        ed_relay_off(DD_WINDOW_ACT_NEG_TERM);
         dd_window_op_cnt = 0;
         dd_window_state = DD_WINDOW_STOP;
     }

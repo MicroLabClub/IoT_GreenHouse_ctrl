@@ -1,12 +1,12 @@
 #include "srv_ui_serial.h"
-#include "dd_dht/dd_dht.h"
-#include "dd_relay/dd_relay.h"
+#include "ed_dht/ed_dht.h"
+#include "ed_relay/ed_relay.h"
 #include "dd_window/dd_window.h"
-// #include "dd_servo/dd_servo.h"
-#include "dd_encoder/dd_encoder.h"
-#include "srv_ctrl_temp_heat/srv_ctrl_temp_heat.h"
-#include "srv_ctrl_temp_vent/srv_ctrl_temp_vent.h"
-#include "srv_ctrl_air_humidity/srv_ctrl_air_humidity.h"
+// #include "ed_servo/ed_servo.h"
+#include "ed_encoder/ed_encoder.h"
+#include "ctrl_temp_heat/ctrl_temp_heat.h"
+#include "ctrl_temp_vent/ctrl_temp_vent.h"
+#include "ctrl_air_humidity/ctrl_air_humidity.h"
 
 void srv_ui_serial_setup()
 {
@@ -27,23 +27,23 @@ void srv_ui_serial_in_loop()
     {
 
     case 'z':// control manual sau automat
-      if (srv_ctrl_temp_vent_is_mode_auto())
+      if (ctrl_temp_vent_is_enabled())
       { // go to manual control
         Serial.println(" SRV_TEMP_WENT:  Change mode to MANUAL");
-        srv_ctrl_temp_vent_set_mode_manual();
+        ctrl_temp_vent_set_mode_manual();
       }
       else
       { // go to automat control
         Serial.println(" SRV_TEMP_WENT:  Change mode to AUTO");
-        srv_ctrl_temp_vent_set_mode_auto();
+        ctrl_temp_vent_set_mode_auto();
       }
       dd_window_stop();
       break;
 
     case 'q': // UP 
-      if (srv_ctrl_temp_vent_is_mode_auto())
+      if (ctrl_temp_vent_is_enabled())
       {
-        srv_ctrl_temp_vent_setpoint_up(0.1);
+        ctrl_temp_vent_setpoint_up(0.1);
       }
       else
       {
@@ -54,9 +54,9 @@ void srv_ui_serial_in_loop()
       break;
 
     case 'a': // Down
-      if (srv_ctrl_temp_vent_is_mode_auto())
+      if (ctrl_temp_vent_is_enabled())
       {
-        srv_ctrl_temp_vent_setpoint_dn(0.1);
+        ctrl_temp_vent_setpoint_dn(0.1);
       }
       else
       {
@@ -66,23 +66,23 @@ void srv_ui_serial_in_loop()
       break;
 
     case 'x':// control manual sau automat
-      if (srv_ctrl_air_hum_is_mode_auto())
+      if (ctrl_air_hum_is_enabled())
       { // go to manual control
         Serial.println(" SRV_TEMP_WENT:  Change mode to MANUAL");
-        srv_ctrl_air_hum_set_mode_manual();
+        ctrl_air_hum_set_mode_manual();
       }
       else
       { // go to automat control
         Serial.println(" SRV_TEMP_WENT:  Change mode to AUTO");
-        srv_ctrl_air_hum_set_mode_auto();
+        ctrl_air_hum_set_mode_auto();
       }
       dd_window_stop();
       break;
 
     case 'w': // UP 
-      if (srv_ctrl_air_hum_is_mode_auto())
+      if (ctrl_air_hum_is_enabled())
       {
-        srv_ctrl_air_hum_setpoint_up(0.1);
+        ctrl_air_hum_setpoint_up(0.1);
       }
       else
       {
@@ -93,9 +93,9 @@ void srv_ui_serial_in_loop()
       break;
 
     case 's': // Down
-      if (srv_ctrl_air_hum_is_mode_auto())
+      if (ctrl_air_hum_is_enabled())
       {
-        srv_ctrl_air_hum_setpoint_dn(0.1);
+        ctrl_air_hum_setpoint_dn(0.1);
       }
       else
       {
@@ -105,23 +105,23 @@ void srv_ui_serial_in_loop()
       break;
 
     case 'u':
-      dd_relay_on(DD_RELAY_ID_2);
+      ed_relay_on(ED_RELAY_ID_2);
       Serial.println(" DD_REL:  Realay 2 Switched ON");
       break;
 
     case 'j':
-      dd_relay_off(DD_RELAY_ID_2);
+      ed_relay_off(ED_RELAY_ID_2);
       Serial.println(" DD_REL:  Realay 2 Switched OFF");
       break;
 
       // case 'w':
-      //   dd_servo_open();
-      //   Serial.println(" DD_SERVO:  Servo Open");
+      //   ed_servo_open();
+      //   Serial.println(" ED_SERVO:  Servo Open");
       //   break;
 
       // case 's':
-      //   dd_servo_close();
-      //   Serial.println(" DD_SERVO:  Close");
+      //   ed_servo_close();
+      //   Serial.println(" ED_SERVO:  Close");
       //   break;
 
     default:
@@ -133,7 +133,7 @@ void srv_ui_serial_in_loop()
 void srv_ui_serial_out_loop()
 {
 
-  int enc_counter = dd_encoder_get_counter();
+  int enc_counter = ed_encoder_get_counter();
   Serial.print("Encoder Position: ");
   Serial.println(enc_counter);
 
@@ -142,15 +142,15 @@ void srv_ui_serial_out_loop()
   Serial.print(temp_setpoint);
   Serial.println(F("°C"));
 
-  if (dd_dht_GetTemperatureError() == 0)
+  if (ed_dht_GetTemperatureError() == 0)
   {
-    float temp = dd_dht_GetTemperature();
+    float temp = ed_dht_GetTemperature();
     Serial.print(F("Temperature: "));
     Serial.print(temp);
     Serial.println(F("°C"));
   }
 
-  int relay_state = dd_relay_getState(DD_RELAY_1_PIN);
+  int relay_state = ed_relay_getState(ED_RELAY_1_PIN);
 
   if (relay_state)
   {
@@ -161,7 +161,7 @@ void srv_ui_serial_out_loop()
     Serial.println("Relay 1 OFF");
   }
 
-  relay_state = dd_relay_getState(DD_RELAY_2_PIN);
+  relay_state = ed_relay_getState(ED_RELAY_2_PIN);
 
   if (relay_state)
   {
@@ -172,11 +172,11 @@ void srv_ui_serial_out_loop()
     Serial.println("Relay 2 OFF");
   }
   // servo report
-  // int servo_current = dd_servo_get_current();
+  // int servo_current = ed_servo_get_current();
   // Serial.print("Servo: Current - ");
   // Serial.print(servo_current);
 
-  // int servo_target = dd_servo_get_target();
+  // int servo_target = ed_servo_get_target();
   // Serial.print("  | Target - ");
   // Serial.println(servo_target);
 }

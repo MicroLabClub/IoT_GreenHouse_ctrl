@@ -3,7 +3,7 @@
 #include "Arduino.h"
 
 int dd_heater_state;
-int dd_heater_relay = DD_RELAY_ID_5;
+int dd_heater_relay = ED_RELAY_ID_5;
 
 void dd_heater_setup()
 {
@@ -16,7 +16,7 @@ void dd_heater_loop()
     uint8_t state = dd_heater_state;
     size_t relay_id = dd_heater_relay;
 
-    dd_relay_setState(relay_id, state);
+    ed_relay_setState(relay_id, state);
 }
 
 int dd_heater_on()

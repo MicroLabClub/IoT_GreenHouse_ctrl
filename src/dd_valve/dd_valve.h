@@ -2,12 +2,12 @@
 #define DD_VALVE_H
 
 #include "Arduino.h"
-#include "dd_relay/dd_relay.h"
+#include "ed_relay/ed_relay.h"
 
 
 
-#define DD_VALVE_ON    DD_RELAY_ON
-#define DD_VALVE_OFF   DD_RELAY_OFF
+#define DD_VALVE_ON    ED_RELAY_ON
+#define DD_VALVE_OFF   ED_RELAY_OFF
 
 
 void dd_valve_setup();
