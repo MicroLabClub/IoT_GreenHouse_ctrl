@@ -3,12 +3,15 @@
 #include "srv_ui_serial/srv_ui_serial.h"
 #include "srv_ctrl_temp_heat/srv_ctrl_temp_heat.h"
 #include "srv_ctrl_temp_vent/srv_ctrl_temp_vent.h"
+#include "srv_ctrl_air_humidity/srv_ctrl_air_humidity.h"
+
 
 #include "lib_cond/lib_cond.h"
 #include "dd_encoder/dd_encoder.h"
 #include "dd_dht/dd_dht.h"
 
 #include "dd_heater/dd_heater.h"
+#include "dd_valve/dd_valve.h"
 #include "dd_window/dd_window.h"
 #include "dd_relay/dd_relay.h"
 // #include "dd_servo/dd_servo.h"
@@ -33,6 +36,9 @@ int dd_relay_rec_cnt = DD_RELAY_REC + 3;
 #define DD_HEATER_REC 100 / SYS_TICK
 int dd_heater_rec_cnt = DD_HEATER_REC + 3;
 
+#define DD_VALVE_REC 100 / SYS_TICK
+int dd_valve_rec_cnt = DD_VALVE_REC + 3;
+
 #define DD_WINDOW_REC 100 / SYS_TICK
 int dd_window_rec_cnt = DD_WINDOW_REC + 3;
 
@@ -45,6 +51,9 @@ int srv_ctrl_temp_vent_rec_cnt = SRV_CTRL_TEMP_VENT_REC + 5;
 #define SRV_CTRL_TEMP_HEAT_REC 10000 / SYS_TICK
 int srv_ctrl_temp_heat_rec_cnt = SRV_CTRL_TEMP_HEAT_REC + 6;
 
+#define SRV_CTRL_AIR_HUM_REC 60000 / SYS_TICK
+int srv_ctrl_air_hum_rec_cnt = SRV_CTRL_AIR_HUM_REC + 6;
+
 void os_seq_scheduler();
 
 void setup()
@@ -54,11 +63,13 @@ void setup()
   dd_dht_setup();
   dd_relay_setup();
   dd_heater_setup();
+  dd_valve_setup();
   dd_window_setup();
   // dd_servo_setup();
   dd_encoder_setup();
   srv_ctrl_temp_heat_setup();
   srv_ctrl_temp_vent_setup();
+  srv_ctrl_air_hum_setup();
 }
 
 void loop()
@@ -102,6 +113,13 @@ void os_seq_scheduler()
     dd_heater_rec_cnt = DD_HEATER_REC;
   }
 
+  // Task de gestionare Heater
+  if (--dd_valve_rec_cnt <= 0)
+  {
+    dd_valve_loop();
+    dd_valve_rec_cnt = DD_VALVE_REC;
+  }
+
   // Task de gestionare ferestre
   if (--dd_window_rec_cnt <= 0)
   {
@@ -128,6 +146,13 @@ void os_seq_scheduler()
   {
     srv_ctrl_temp_vent_loop();
     srv_ctrl_temp_vent_rec_cnt = SRV_CTRL_TEMP_VENT_REC;
+  }
+
+  // Task de control al temperaturii OPEN-CLOSE cu Ventilare
+  if (--srv_ctrl_air_hum_rec_cnt <= 0)
+  {
+    srv_ctrl_air_hum_loop();
+    srv_ctrl_air_hum_rec_cnt = SRV_CTRL_AIR_HUM_REC;
   }
 
   // Task de raportare periodica a semnalelor in serial terminal

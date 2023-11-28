@@ -14,6 +14,7 @@ enum dd_relay_t{
     DD_RELAY_ID_1,
     DD_RELAY_ID_2,
     DD_RELAY_ID_3,
+    DD_RELAY_ID_4,
     DD_RELAY_NR_OF
 };
 
