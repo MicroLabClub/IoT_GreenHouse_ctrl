@@ -13,10 +13,9 @@
 void dd_valve_setup();
 void dd_valve_loop();
 
-int dd_valve_on();
+int dd_valve_on(uint16_t time);
 int dd_valve_off();
 int dd_valve_get_state();
-int dd_valve_set_state (int state);
 
 #endif
 

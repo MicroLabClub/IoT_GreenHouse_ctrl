@@ -2,8 +2,20 @@
 #include "dd_valve.h"
 #include "Arduino.h"
 
-int dd_valve_state;
+
 int dd_valve_relay = DD_RELAY_ID_4;
+
+int dd_valve_state = DD_VALVE_OFF;
+uint32_t dd_valve_op_cnt = 0;
+
+
+
+int dd_valve_get_gtate()
+{
+    return dd_valve_state;
+}
+
+
 
 void dd_valve_setup()
 {
@@ -13,31 +25,41 @@ void dd_valve_setup()
 void dd_valve_loop()
 {
 
-    uint8_t state = dd_valve_state;
-    size_t relay_id = dd_valve_relay;
+    if (--dd_valve_op_cnt <= 0)
+    {
+        dd_valve_op_cnt = 0;
+        dd_valve_state = DD_VALVE_OFF;
+    }
 
-    dd_relay_setState(relay_id, state);
+    if (dd_valve_state == DD_VALVE_ON)
+    {
+
+        dd_relay_on(dd_valve_relay);
+    }
+    else
+    { // stop
+        dd_relay_off(dd_valve_relay);
+        dd_valve_op_cnt = 0;
+		dd_valve_state = DD_VALVE_OFF;
+    }
+
 }
 
-int dd_valve_on()
-{
-    int state = dd_valve_set_state( DD_VALVE_ON);
-    return state;
-}
 
 int dd_valve_off()
 {
-    int state = dd_valve_set_state(DD_VALVE_OFF);
-    return state;
+    dd_valve_op_cnt = 0;
+    dd_valve_state = DD_VALVE_OFF;
+    return dd_valve_state;
+
 }
 
-int dd_valve_get_gtate()
+int dd_valve_on(uint16_t time)
 {
+    dd_valve_op_cnt = time;
+    dd_valve_state = DD_VALVE_ON;
     return dd_valve_state;
 }
 
-int dd_valve_set_state( int state)
-{
-    dd_valve_state = state;
-    return dd_valve_state;
-}
+
+

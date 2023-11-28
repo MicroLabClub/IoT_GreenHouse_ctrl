@@ -49,8 +49,9 @@ void dd_window_loop()
 
 int8_t dd_window_stop()
 {
-    dd_window_state = DD_WINDOW_STOP;
     dd_window_op_cnt = 0;
+	dd_window_state = DD_WINDOW_STOP;
+
 }
 
 int8_t dd_window_open(uint16_t time)
