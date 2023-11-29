@@ -1,5 +1,5 @@
 #include "ctrl_temp_vent.h"
-#include "ed_dht/ed_dht.h"
+#include "srv_sns_air_temp/srv_sns_air_temp.h"
 #include "dd_window/dd_window.h"
 
 
@@ -70,11 +70,10 @@ void ctrl_temp_vent_loop()
 {
   if (ctrl_temp_vent_mode == CTRL_ENABLE)
   {
-    if (ed_dht_GetTemperatureError() == 0)
+    if (srv_sns_air_GetTemperatureError() == 0)
     {
 
-      float temp_current = ed_dht_GetTemperature();
-
+      float temp_current = srv_sns_air_GetTemperature();
 
       int temp_open = ctrl_temp_vent_setpoint + TEMP_VENT_HISTERESIS;
       int temp_close = ctrl_temp_vent_setpoint - TEMP_VENT_HISTERESIS;
