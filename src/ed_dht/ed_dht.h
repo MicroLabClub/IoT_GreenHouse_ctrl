@@ -2,7 +2,8 @@
 #define ED_DHT_H_
 
 
-#define DHTPIN GPIO5      // Digital pin connected to the DHT sensor 
+// #define DHTPIN GPIO5      // Digital pin connected to the DHT sensor 
+#define DHTPIN 4      // Digital pin connected to the DHT sensor 
 
 void ed_dht_setup();
 void ed_dht_loop();

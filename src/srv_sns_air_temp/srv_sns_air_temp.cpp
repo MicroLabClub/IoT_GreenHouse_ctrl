@@ -3,7 +3,7 @@
 #include "../lib_cond/lib_cond.h"
 #include "Arduino.h"
 
-float srv_sns_air_temperature = 0;
+float srv_sns_air_temperature = 19.0;
 int srv_sns_air_temperature_error = 0;
 
 
@@ -51,9 +51,9 @@ void srv_sns_air_temp_loop()
     srv_sns_air_temperature_error = 0;
     float temp_raw = ed_dht_GetTemperature();
 
-    Serial.print(F("SRV SNS Temperature: "));
-    Serial.print(temp_raw);
-    Serial.println(F("°C"));
+    // Serial.print(F("SRV SNS Temperature: "));
+    // Serial.print(temp_raw);
+    // Serial.println(F("°C"));
 
     srv_sns_air_temperature = srv_sns_air_temp_cond(temp_raw);
   }

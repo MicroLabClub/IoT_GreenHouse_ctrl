@@ -51,6 +51,7 @@ int8_t dd_window_stop()
 {
     dd_window_op_cnt = 0;
 	dd_window_state = DD_WINDOW_STOP;
+    return dd_window_state;
 
 }
 
@@ -58,10 +59,12 @@ int8_t dd_window_open(uint16_t time)
 {
     dd_window_op_cnt = time;
     dd_window_state = DD_WINDOW_OPEN;
+    return dd_window_state;
 }
 
 int8_t dd_window_close(uint16_t time)
 {
     dd_window_op_cnt = time;
     dd_window_state = DD_WINDOW_CLOSE;
+    return dd_window_state;
 }

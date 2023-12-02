@@ -110,9 +110,9 @@ void ed_dht_loop()
     ed_dht_temperature_error = 0;
     ed_dht_temperature = event.temperature;
 
-    Serial.print(F("ED DHT Temperature: "));
-    Serial.print(ed_dht_temperature);
-    Serial.println(F("°C"));
+    // Serial.print(F("ED DHT Temperature: "));
+    // Serial.print(ed_dht_temperature);
+    // Serial.println(F("°C"));
   }
 
   // Get humidity event and print its value.
@@ -128,8 +128,8 @@ void ed_dht_loop()
     ed_dht_humidity_error = 0;
     ed_dht_humidity = event.relative_humidity;
 
-    Serial.print(F("ED DHT Humidity: "));
-    Serial.print(ed_dht_humidity);
-    Serial.println(F("%"));
+    // Serial.print(F("ED DHT Humidity: "));
+    // Serial.print(ed_dht_humidity);
+    // Serial.println(F("%"));
   }
 }

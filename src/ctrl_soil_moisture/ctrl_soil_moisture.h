@@ -1,5 +1,5 @@
-#ifndef CTRL_SOIL_MOISTIDITY_H_
-#define CTRL_SOIL_MOISTIDITY_H_
+#ifndef CTRL_SOIL_MOISTURE_H_
+#define CTRL_SOIL_MOISTURE_H_
 
 #include "stdint.h"
 

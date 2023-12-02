@@ -43,11 +43,11 @@ int8_t ctrl_press_isol_set_mode(int8_t mode)
 }
 int8_t ctrl_press_isol_set_mode_manual()
 {
-  ctrl_press_isol_set_mode(CTRL_DISABLE);
+  return ctrl_press_isol_set_mode(CTRL_DISABLE);
 }
 int8_t ctrl_press_isol_set_mode_auto()
 {
-  ctrl_press_isol_set_mode(CTRL_ENABLE);
+  return ctrl_press_isol_set_mode(CTRL_ENABLE);
 }
 int8_t ctrl_press_isol_is_enabled()
 {

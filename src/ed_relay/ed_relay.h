@@ -3,11 +3,21 @@
 
 #include "Arduino.h"
 
-#define ED_RELAY_1_PIN GPIO1
-#define ED_RELAY_2_PIN GPIO2
-#define ED_RELAY_3_PIN GPIO3
-#define ED_RELAY_4_PIN GPIO4
-#define ED_RELAY_5_PIN GPIO5
+#ifndef ED_RELAY_1_PIN
+#define ED_RELAY_1_PIN 0 //GPIO1
+#endif
+#ifndef ED_RELAY_2_PIN
+#define ED_RELAY_2_PIN 2 //GPIO2
+#endif
+#ifndef ED_RELAY_3_PIN
+#define ED_RELAY_3_PIN 0 // GPIO3
+#endif
+#ifndef ED_RELAY_4_PIN
+#define ED_RELAY_4_PIN 0 // GPIO4
+#endif
+#ifndef ED_RELAY_5_PIN
+#define ED_RELAY_5_PIN 0 // GPIO5
+#endif
 
 #define ED_RELAY_ON LOW
 #define ED_RELAY_OFF HIGH
