@@ -8,8 +8,8 @@
  *  
  */
  
- #define outputA 4
- #define outputB 5
+ #define ED_ENCODER_PH_A 4
+ #define ED_ENCODER_PH_B 5
 
  int counter = 0; 
  int aState;
@@ -29,20 +29,20 @@ int  ed_encoder_reset_counter(){
 }
 
  void ed_encoder_setup() { 
-   pinMode (outputA,INPUT);
-   pinMode (outputB,INPUT);
+   pinMode (ED_ENCODER_PH_A,INPUT);
+   pinMode (ED_ENCODER_PH_B,INPUT);
    
 //    Serial.begin (9600);
    // Reads the initial state of the outputA
-   aLastState = digitalRead(outputA);   
+   aLastState = digitalRead(ED_ENCODER_PH_A);   
  } 
 
  void ed_encoder_loop() { 
-   aState = digitalRead(outputA); // Reads the "current" state of the outputA
+   aState = digitalRead(ED_ENCODER_PH_A); // Reads the "current" state of the outputA
    // If the previous and the current state of the outputA are different, that means a Pulse has occured
    if (aState != aLastState){     
      // If the outputB state is different to the outputA state, that means the encoder is rotating clockwise
-     if (digitalRead(outputB) != aState) { 
+     if (digitalRead(ED_ENCODER_PH_B) != aState) { 
        counter ++;
      } else {
        counter --;

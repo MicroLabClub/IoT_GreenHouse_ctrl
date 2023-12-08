@@ -7,10 +7,12 @@
 // #include "ctrl_lights/ctrl_lights.h"
 // #include "ctrl_press_isol/ctrl_press_isol.h"
 // #include "ctrl_soil_moisture/ctrl_soil_moisture.h"
-// #include "ctrl_temp_heat/ctrl_temp_heat.h"
 
 #ifdef USE_CTRL_TEMP_VENT
 #include "ctrl_temp_vent/ctrl_temp_vent.h"
+#endif
+#ifdef USE_CTRL_TEMP_HEAT
+#include "ctrl_temp_heat/ctrl_temp_heat.h"
 #endif
 
 //=============================================================================
@@ -21,18 +23,20 @@
 
 //=============================================================================
 // Devise abstraction components
-// #include "dd_heater/dd_heater.h"
 // #include "dd_lights/dd_lights.h"
 // #include "dd_valve/dd_valve.h"
 
 #ifdef USE_DD_WINDOW
 #include "dd_window/dd_window.h"
 #endif
+#ifdef USE_DD_HEATER
+#include "dd_heater/dd_heater.h"
+#endif
 
 // ECU Abstraction components
 
-#ifdef USE_ED_DHT
-// #include "ed_bmp/ed_bmp.h"
+#ifdef USE_ED_BMP
+#include "ed_bmp/ed_bmp.h"
 #endif
 
 #ifdef USE_ED_DHT
@@ -67,7 +71,7 @@ void srv_ui_serial_in_loop()
     switch (cmd)
     {
 
-    case 'z': // control manual sau automat
+    case 'z': //  manual or automat control
 #if defined USE_CTRL_TEMP_VENT
       if (ctrl_temp_vent_is_enabled())
       { // go to manual control
@@ -143,64 +147,30 @@ void srv_ui_serial_in_loop()
 #endif
       break;
 
-      // case 'x': // control manual sau automat
-      //   if (ctrl_air_hum_is_enabled())
-      //   { // go to manual control
-      //     Serial.println(" CTRL_TEMP_VENT:  Change mode to MANUAL");
-      //     ctrl_air_hum_set_mode_manual();
-      //   }
-      //   else
-      //   { // go to automat control
-      //     Serial.println(" CTRL_TEMP_VENT:  Change mode to AUTO");
-      //     ctrl_air_hum_set_mode_auto();
-      //   }
-      //   dd_valve_stop();
-      //   break;
+    case 'w':  //  manual or automat control
+#if defined USE_CTRL_TEMP_HEAT
+      if (ctrl_temp_heat_is_enabled())
+      { // go to manual control
+        Serial.println(" CTRL_TEMP_HEAT:  Change mode to MANUAL");
+        ctrl_temp_heat_set_mode_manual();
+      }
+      else
+      { // go to automat control
+        Serial.println(" CTRL_TEMP_HEAT:  Change mode to AUTO");
+        ctrl_temp_heat_set_mode_auto();
+      }
+#elif defined USE_DD_HEATER
+      dd_heater_stop();
+      Serial.println("DD_HEATER: STOP Command");
+#elif defined USE_ED_RELAY
+      Serial.println("DD_RELAY: STOP Command");
+      ed_relay_off(ED_RELAY_ID_3);
+#else
+      Serial.println("CTRL_TEMP_HEAT: AUTO/MANUAL/STOP Command <no action>");
+#endif
+      break;
 
-      // case 'w': // UP
-      //   if (ctrl_air_hum_is_enabled())
-      //   {
-      //     ctrl_air_hum_setpoint_up(0.1);
-      //   }
-      //   else
-      //   {
-      //     dd_valve_open(100);
-      //     Serial.println(" DD_VALVE: Window opening");
-      //   }
 
-      //   break;
-
-      // case 's': // Down
-      //   if (ctrl_air_hum_is_enabled())
-      //   {
-      //     ctrl_air_hum_setpoint_dn(0.1);
-      //   }
-      //   else
-      //   {
-      //     dd_valve_close(100);
-      //     Serial.println(" DD_VALVE: Window opening");
-      //   }
-      //   break;
-
-      // case 'u':
-      //   ed_relay_on(ED_RELAY_ID_2);
-      //   Serial.println(" DD_REL:  Realay 2 Switched ON");
-      //   break;
-
-      // case 'j':
-      //   ed_relay_off(ED_RELAY_ID_2);
-      //   Serial.println(" DD_REL:  Realay 2 Switched OFF");
-      //   break;
-
-      // case 'w':
-      //   ed_servo_open();
-      //   Serial.println(" ED_SERVO:  Servo Open");
-      //   break;
-
-      // case 's':
-      //   ed_servo_close();
-      //   Serial.println(" ED_SERVO:  Close");
-      //   break;
 
     default:
       break;
@@ -212,11 +182,10 @@ void srv_ui_serial_out_loop()
 {
   Serial.println(F("===== GH System Report ===== "));
 
-  // int enc_counter = ed_encoder_get_counter();
-  // Serial.print("Encoder Position: ");
-  // Serial.println(enc_counter);
 
   srv_ui_serial_ctrl_temp_vent_report();
+
+  srv_ui_serial_sns_air_temp_report();
 
   srv_ui_serial_dht_report();
 
@@ -224,14 +193,7 @@ void srv_ui_serial_out_loop()
 
   srv_ui_serial_win_report();
 
-  // servo report
-  // int servo_current = ed_servo_get_current();
-  // Serial.print("Servo: Current - ");
-  // Serial.print(servo_current);
 
-  // int servo_target = ed_servo_get_target();
-  // Serial.print("  | Target - ");
-  // Serial.println(servo_target);
   Serial.println();
 }
 
@@ -341,3 +303,74 @@ void srv_ui_serial_dht_report()
   }
 #endif
 }
+
+//----------------------------------------------------------
+// Ambient Temperature sensor service report
+//----------------------------------------------------------
+void srv_ui_serial_sns_air_temp_report()
+{
+#ifdef USE_SRV_SNS_AIR_TEMP
+  float temp = srv_sns_air_GetTemperature();
+  Serial.print(F("SRV_SNS_AIR_TEMP: Temperature: "));
+  Serial.print(temp);
+  Serial.println(F("°C"));
+#endif
+}
+
+void srv_ui_serial_ctrl_temp_heat_report()
+{
+#ifdef USE_CTRL_TEMP_HEAT
+  if (ctrl_temp_heat_is_enabled())
+  {
+    Serial.println(F("CTRL_HEAT: Mode AUTO "));
+  }
+  else
+  {
+    Serial.println(F("CTRL_HEAT: Mode MANUAL"));
+  }
+
+  float temp_setpoint = ctrl_temp_heat_get_setpoint();
+  Serial.print(F("CTRL_HEAT: SP: "));
+  Serial.print(temp_setpoint);
+  Serial.print(F("°C "));
+
+  Serial.print(F("HIST[OP: "));
+  Serial.print(temp_setpoint + TEMP_HEAT_HISTERESIS);
+  Serial.print(F("°C  "));
+
+  Serial.print(F("CL: "));
+  Serial.print(temp_setpoint - TEMP_HEAT_HISTERESIS);
+  Serial.print(F("°C] "));
+
+  float temp_current = ctrl_temp_heat_get_current_temp();
+  Serial.print(F("CTRL_HEAT: Cur: "));
+  Serial.print(temp_current);
+  Serial.println(F("°C"));
+#endif
+}
+
+void srv_ui_serial_dd_heater_report()
+{ // Heater Report
+#ifdef USE_DD_HEATER
+  int heater_state = dd_heater_get_state();
+  Serial.print(F("DD_HEATER: Heater "));
+  Serial.print(heater_state);
+  Serial.print(F(" - "));
+
+  if (heater_state == DD_HEATER_OFF)
+  {
+    Serial.println(F(" STOP"));
+  }
+  else if (heater_state == DD_HEATER_ON)
+  {
+    Serial.println(F(" ON"));
+  }
+  else
+  {
+    Serial.println(F(" UNDEFINED"));
+  }
+#endif
+}
+
+
+
