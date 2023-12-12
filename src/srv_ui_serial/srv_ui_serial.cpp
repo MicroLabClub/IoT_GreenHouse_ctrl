@@ -14,6 +14,9 @@
 #ifdef USE_CTRL_TEMP_HEAT
 #include "ctrl_temp_heat/ctrl_temp_heat.h"
 #endif
+#ifdef USE_CTRL_AIR_HUM
+#include "ctrl_air_humidity/ctrl_air_humidity.h"
+#endif
 
 //=============================================================================
 // Platform Services
@@ -31,6 +34,9 @@
 #endif
 #ifdef USE_DD_HEATER
 #include "dd_heater/dd_heater.h"
+#endif
+#ifdef USE_DD_VALVE
+#include "dd_valve/dd_valve.h"
 #endif
 
 // ECU Abstraction components
@@ -147,28 +153,85 @@ void srv_ui_serial_in_loop()
 #endif
       break;
 
-    case 'w':  //  manual or automat control
-#if defined USE_CTRL_TEMP_HEAT
-      if (ctrl_temp_heat_is_enabled())
+    case 'x':  //  manual or automat control
+#if defined USE_CTRL_AIR_HUM
+      if (ctrl_air_hum_is_enabled())
       { // go to manual control
-        Serial.println(" CTRL_TEMP_HEAT:  Change mode to MANUAL");
-        ctrl_temp_heat_set_mode_manual();
+        Serial.println(" CTRL_AIR_HUM:  Change mode to MANUAL");
+        ctrl_air_hum_set_mode_manual();
       }
       else
       { // go to automat control
-        Serial.println(" CTRL_TEMP_HEAT:  Change mode to AUTO");
-        ctrl_temp_heat_set_mode_auto();
-      }
-#elif defined USE_DD_HEATER
-      dd_heater_stop();
-      Serial.println("DD_HEATER: STOP Command");
+        Serial.println(" CTRL_AIR_HUM:  Change mode to AUTO");
+        ctrl_air_hum_set_mode_auto();
+      } 
+#elif defined USE_DD_VALVE
+      dd_valve_stop();
+      Serial.println("DD_VALVE: STOP Command");
 #elif defined USE_ED_RELAY
       Serial.println("DD_RELAY: STOP Command");
       ed_relay_off(ED_RELAY_ID_3);
-#else
-      Serial.println("CTRL_TEMP_HEAT: AUTO/MANUAL/STOP Command <no action>");
+#else   
+      Serial.println("CTRL_AIR_HUM: AUTO/MANUAL/STOP Command <no action>"); 
 #endif
       break;
+      case 'w': // UP 
+#if defined USE_CTRL_AIR_HUM
+    if (ctrl_air_hum_is_enabled())
+    {
+      ctrl_air_hum_setpoint_up(0.1);
+      Serial.print("CTRL_AIR_HUM: Increase Setpoint:");
+      int sp = ctrl_air_hum_get_setpoint();
+      Serial.println(sp);
+    }
+    else
+    {
+      dd_valve_on(2 * TIME_SEC);
+      Serial.println("CTRL_AIR_HUM: Manual Valve opening");
+    }
+#elif defined USE_DD_VALVE
+    dd_valve_on(4 * TIME_SEC / DD_VALVE_REC);
+    Serial.println("DD_VALVE: Valve opening");
+#elif defined USE_ED_RELAY
+    ed_relay_on(ED_RELAY_ID_3);
+    Serial.println("DD_VALVE: Valve opening");
+#else
+    Serial.println("CTRL_AIR_HUM: OPEN/SP_Up Command <no action>");
+#endif
+    break;
+
+  case 's': // Down
+#if defined USE_CTRL_AIR_HUM
+    if (ctrl_air_hum_is_enabled())
+    {
+      ctrl_air_hum_setpoint_dn(0.1);
+      Serial.print("CTRL_AIR_HUM: Decreasing Setpoint:");
+      int sp = ctrl_air_hum_get_setpoint();
+      Serial.println(sp);
+    }
+    else
+    {
+      dd_valve_off();
+      Serial.println(" DD_VALVE: Valve Closing");
+    }
+#elif defined USE_DD_VALVE
+    dd_valve_off(4 * TIME_SEC / DD_VALVE_REC);
+    Serial.println("DD_VALVE: Valve closing");
+#elif defined USE_ED_RELAY
+    ed_relay_off(ED_RELAY_ID_3);
+    Serial.println(" ED_RELAY: Valve Closing");
+#else
+    Serial.println("CTRL_AIR_HUM: CLOSE/SP_Dn Command <no action>");
+#endif
+    break;
+
+
+
+
+
+
+
+
 
 
 
@@ -183,7 +246,7 @@ void srv_ui_serial_out_loop()
   Serial.println(F("===== GH System Report ===== "));
 
 
-  srv_ui_serial_ctrl_temp_vent_report();
+  srv_ui_serial_ctrl_steering_report();
 
   srv_ui_serial_sns_air_temp_report();
 
@@ -197,7 +260,7 @@ void srv_ui_serial_out_loop()
   Serial.println();
 }
 
-void srv_ui_serial_ctrl_temp_vent_report()
+void srv_ui_serial_ctrl_steering_report()
 {
 #ifdef USE_CTRL_TEMP_VENT
 
@@ -346,6 +409,39 @@ void srv_ui_serial_ctrl_temp_heat_report()
   Serial.print(F("CTRL_HEAT: Cur: "));
   Serial.print(temp_current);
   Serial.println(F("°C"));
+#endif
+}
+
+void srv_ui_serial_ctrl_air_hum_report()
+{
+
+#ifdef USE_CTRL_AIR_HUM
+  if (ctrl_air_hum_is_enabled())
+  {
+    Serial.println(F("CTRL_AIR_HUM: Mode AUTO "));
+  }
+  else
+  {
+    Serial.println(F("CTRL_AIR_HUM: Mode MANUAL"));
+  }
+
+  float hum_setpoint = ctrl_air_hum_get_setpoint();
+  Serial.print(F("CTRL_AIR_HUM: SP: "));
+  Serial.print(hum_setpoint);
+  Serial.print(F("% "));
+
+  Serial.print(F("HIST[OP: "));
+  Serial.print(hum_setpoint + AIR_HUM_HISTERESIS);
+  Serial.print(F("%  "));
+
+  Serial.print(F("CL: "));
+  Serial.print(hum_setpoint - AIR_HUM_HISTERESIS);
+  Serial.print(F("%] "));
+
+  float hum_current = ctrl_air_hum_get_current_hum();
+  Serial.print(F("CTRL_AIR_HUM: Cur: "));
+  Serial.print(hum_current);
+  Serial.println(F("%"));
 #endif
 }
 

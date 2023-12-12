@@ -44,6 +44,10 @@
 #ifdef USE_SRV_SNS_AIR_TEMP
 #include "srv_sns_air_temp/srv_sns_air_temp.h"
 #endif
+//-----------------------------------------------------------------------------
+#ifdef USE_SRV_SNS_AIR_HUM
+#include "srv_sns_air_hum/srv_sns_air_hum.h"
+#endif
 
 //=============================================================================
 // Device abstraction components
@@ -172,6 +176,16 @@ int terminal_in_rec_cnt = TERMINAL_IN_OFFSET;
 int terminal_our_rec_cnt = TERMINAL_OUT_OFFSET;
 #endif
 
+#ifdef USE_SRV_COM_MQTT
+#ifndef SRV_COM_MQTT_REC
+#define SRV_COM_MQTT_REC (1* TIME_SEC)
+#endif
+#ifndef SRV_COM_MQTT_OFFSET
+#define SRV_COM_MQTT_OFFSET (5* TIME_SEC)
+#endif
+int srv_com_mqtt_rec_cnt = SRV_COM_MQTT_OFFSET;
+#endif
+
 #ifdef USE_SRV_SNS_AIR_TEMP
 #ifndef SRV_SNS_AIR_TEMP_REC
 #define SRV_SNS_AIR_TEMP_REC (TIME_SEC / 10)
@@ -182,6 +196,15 @@ int terminal_our_rec_cnt = TERMINAL_OUT_OFFSET;
 int srv_sns_air_temp_rec_cnt = SRV_SNS_AIR_TEMP_OFFSET;
 #endif
 
+#ifdef USE_SRV_SNS_AIR_HUM
+#ifndef SRV_SNS_AIR_HUM_REC
+#define SRV_SNS_AIR_HUM_REC (TIME_SEC / 10)
+#endif
+#ifndef SRV_SNS_AIR_HUM_OFFSET
+#define SRV_SNS_AIR_HUM_OFFSET 50
+#endif
+int srv_sns_air_hum_rec_cnt = SRV_SNS_AIR_HUM_OFFSET;
+#endif
 
 #ifdef USE_ED_DHT
 #ifndef ED_DHT_REC
@@ -281,6 +304,9 @@ void setup()
 #ifdef USE_SRV_SNS_AIR_TEMP
   srv_sns_air_temp_setup();
 #endif
+#ifdef USE_SRV_SNS_AIR_HUM
+  srv_sns_air_hum_setup();
+#endif
 
   // Initialize electronic devices
 #ifdef USE_ED_DHT
@@ -360,6 +386,15 @@ void os_seq_scheduler()
   }
 #endif
 
+#ifdef USE_SRV_COM_MQTT
+// Task for handling MQTT communication
+if(--srv_com_mqtt_rec_cnt <= 0)
+{
+  srv_com_mqtt_loop();
+  srv_com_mqtt_rec_cnt = SRV_COM_MQTT_REC;
+}
+#endif
+
 #ifdef USE_ED_DHT
   // Task for collecting data from the DHT11 sensor
   if (--ed_dht_rec_cnt <= 0)
@@ -375,6 +410,15 @@ void os_seq_scheduler()
   {
     srv_sns_air_temp_loop();
     srv_sns_air_temp_rec_cnt = SRV_SNS_AIR_TEMP_REC;
+  }
+#endif
+
+#ifdef USE_SRV_SNS_AIR_HUM
+  // Task for collecting data from the air humidity sensor
+  if (--srv_sns_air_hum_rec_cnt <= 0)
+  {
+    srv_sns_air_hum_loop();
+    srv_sns_air_hum_rec_cnt = SRV_SNS_AIR_HUM_REC;
   }
 #endif
 

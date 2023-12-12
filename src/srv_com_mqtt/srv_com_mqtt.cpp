@@ -10,6 +10,7 @@
 #define WIFI_AP_NAME        "Galaxy Fold4DBB3"
 // WiFi password
 #define WIFI_PASSWORD       "the8time"
+// #define WIFI_PASSWORD       "A3KBuSpq"
 
 const char *SSID = WIFI_AP_NAME;
 const char *PWD = WIFI_PASSWORD;
@@ -53,8 +54,8 @@ void srv_com_mqtt_loop() {
   if (!mqttClient.connected())
     reconnect();
   mqttClient.loop();
-  long now = millis();
-  if (now - last_time > 10000) {
+  // long now = millis();
+  // if (now - last_time > 1000) {
     // Send data
     sensorValue = (float)((analogRead(A0) + random(0xff) + test_counter++)&0xff)/10.0;
     Serial.print(" Sensor Value Data:");
@@ -67,9 +68,9 @@ void srv_com_mqtt_loop() {
     // 
     mqttClient.publish("/swa/sensorValue", data);
 
-    // Reset timer
-    last_time = now;
-  }
+  //   // Reset timer
+  //   last_time = now;
+  // }
 }
 
 
@@ -142,3 +143,4 @@ void reconnect() {
       
   }
 }
+

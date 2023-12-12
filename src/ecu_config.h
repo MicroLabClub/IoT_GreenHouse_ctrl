@@ -16,7 +16,10 @@
 #define ECU_CTRL_PRESS_ISOL 5
 #define ECU_CTRL_AIR_HUMIDITY 6
 
-#define ECU_CONFIG ECU_CTRL_TEMP_HEAT
+//==============================================================================
+// Select configuration for ECU HERE !!
+#define ECU_CONFIG ECU_CTRL_AIR_HUMIDITY
+//==============================================================================
 
 
 
@@ -41,8 +44,13 @@
 
 #include "ecu_config_ctrl_press_isol.h"
 
-
 #elif ECU_CONFIG == ECU_CTRL_SOIL_MOISTURE
+
+#include "ecu_config_ctrl_soil_moisture.h"
+
+#elif ECU_CONFIG == ECU_CTRL_AIR_HUMIDITY
+
+#include "ecu_config_ctrl_air_hum.h"
 
 #endif
 
