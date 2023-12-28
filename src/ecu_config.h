@@ -1,8 +1,10 @@
 #ifndef ECU_CONFIG_H_
 #define ECU_CONFIG_H_
 
-#define SYS_TICK 10 // ms
-#define TIME_SEC (1000 / SYS_TICK)
+#define SYS_TICK (10.0) // ms
+#define TIME_uSEC (1)
+
+#define TIME_SEC (1000 * TIME_uSEC)
 #define TIME_MIN (60 * TIME_SEC)
 #define TIME_HOUR (60 * TIME_MIN)
 #define TIME_DAY (24 * TIMTIME_HOURE_MIN)
@@ -18,19 +20,15 @@
 
 //==============================================================================
 // Select configuration for ECU HERE !!
-#define ECU_CONFIG ECU_CTRL_AIR_HUMIDITY
+#define ECU_CONFIG ECU_CTRL_LIGHT
 //==============================================================================
-
-
 
 #if ECU_CONFIG == ECU_ALL
 
 #define USE_SRV_UI_SERIAL
 
-
 #elif ECU_CONFIG == ECU_CTRL_TEMP_VENT
 #include "ecu_config_ctrl_temp_vent.h"
-
 
 #elif ECU_CONFIG == ECU_CTRL_TEMP_HEAT
 

@@ -5,10 +5,12 @@ void srv_ui_serial_setup();
 void srv_ui_serial_in_loop();
 void srv_ui_serial_out_loop();
 
-void srv_ui_serial_win_report();
-void srv_ui_serial_relay_report();
-void srv_ui_serial_sns_air_temp_report();
-void srv_ui_serial_dht_report();
-void srv_ui_serial_ctrl_steering_report();
+void dd_window_report();
+void ed_relay_report();
+void srv_sns_air_temp_report();
+void ed_dht_report();
+void ctrl_temp_vent_report();
+void ctrl_temp_heat_report();
+void ctrl_lights_report();
 
 #endif

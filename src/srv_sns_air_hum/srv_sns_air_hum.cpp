@@ -43,7 +43,7 @@ void srv_sns_air_hum_loop()
 
   if (ed_dht_GetHumidityError())
   {
-    Serial.println(F("SRV SNS Error reading humidity!"));
+    // Serial.println(F("SRV SNS Error reading humidity!"));
     srv_sns_air_humidity_error = 1;
   }
   else

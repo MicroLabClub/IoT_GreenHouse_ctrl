@@ -2,7 +2,8 @@
 #define ECU_CONFIG_CTRL_AIR_HUM_H_
 
 #define USE_CTRL_AIR_HUM
-#define USE_OS_SEQ_TASK
+// #define USE_SRV_OS_TASK_SEQ
+#define USE_SRV_OS_FREERTOS
 #define USE_SRV_UI_SERIAL
 // #define USE_SRV_COM_MQTT
 #define USE_DD_VALVE

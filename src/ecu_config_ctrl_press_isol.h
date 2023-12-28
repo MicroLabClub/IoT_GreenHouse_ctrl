@@ -6,6 +6,8 @@
 #define USE_ED_RELAY
 #define USE_SRV_SNS_AIR_TEMP
 #define USE_ED_BMP
+// #define USE_SRV_OS_TASK_SEQ
+#define USE_SRV_OS_FREERTOS
 
 
 #define ED_RELAY_REC (100 / SYS_TICK)   

@@ -36,7 +36,23 @@ float ctrl_temp_vent_setpoint_dn(float d_val)
 
 int8_t ctrl_temp_vent_set_mode(int8_t mode)
 {
-  ctrl_temp_vent_mode = mode;
+  if (mode == CTRL_TEMP_VENT_DISABLE)
+  {
+    ctrl_temp_vent_mode = CTRL_TEMP_VENT_DISABLE;
+  }
+  else if (mode == CTRL_TEMP_VENT_ENABLE)
+  {
+    ctrl_temp_vent_mode = CTRL_TEMP_VENT_ENABLE;
+  }
+  else
+  {
+    return -1;
+  }
+  return ctrl_temp_vent_mode;
+}
+
+int8_t ctrl_temp_vent_get_mode()
+{
   return ctrl_temp_vent_mode;
 }
 int8_t ctrl_temp_vent_set_mode_manual()
@@ -51,9 +67,9 @@ int8_t ctrl_temp_vent_is_enabled()
 {
   return ctrl_temp_vent_mode == CTRL_TEMP_VENT_ENABLE;
 }
-int8_t ctrl_temp_vent_get_mode()
+float ctrl_temp_vent_get_current_temp()
 {
-  return ctrl_temp_vent_mode;
+  return srv_sns_air_get_temperature();
 }
 
 void ctrl_temp_vent_setup()
@@ -62,18 +78,13 @@ void ctrl_temp_vent_setup()
   ctrl_temp_vent_mode = CTRL_TEMP_VENT_DISABLE;
 }
 
-float ctrl_temp_vent_get_current_temp()
-{
-  return srv_sns_air_GetTemperature();
-}
-
 void ctrl_temp_vent_loop()
 {
   if (ctrl_temp_vent_mode == CTRL_TEMP_VENT_ENABLE)
   {
-    if (srv_sns_air_GetTemperatureError() == 0)
+    if (srv_sns_air_get_temperature_error() == 0)
     {
-      float temp_current = srv_sns_air_GetTemperature();
+      float temp_current = srv_sns_air_get_temperature();
       float temp_open = ctrl_temp_vent_setpoint + TEMP_VENT_HISTERESIS;
       float temp_close = ctrl_temp_vent_setpoint - TEMP_VENT_HISTERESIS;
 

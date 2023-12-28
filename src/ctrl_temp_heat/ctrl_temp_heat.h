@@ -8,8 +8,8 @@
 #define TEMP_HEAT_HISTERESIS (0.5)
 #endif
 
-#ifndef DD_WIN_OP_D_TIME
-#define DD_WIN_OP_D_TIME 10
+#ifndef DD_HEAT_OP_D_TIME
+#define DD_HEAT_OP_D_TIME 10
 #endif
 
 #define CTRL_TEMP_HEAT_DISABLE 0

@@ -13,8 +13,8 @@ void dd_window_setup();
 void dd_window_loop();
 
 int8_t dd_window_stop();
-int8_t dd_window_open(uint16_t time);
-int8_t dd_window_close(uint16_t time);
+int8_t dd_window_open(int time);
+int8_t dd_window_close(int time);
 uint8_t dd_window_get_state();
 
 #endif

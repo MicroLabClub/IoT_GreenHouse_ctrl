@@ -21,7 +21,7 @@ void ed_sns_moist_loop()
   int moisture = analogRead(ED_SNS_MOIST_PIN); // read the analog value from sensor
   ed_sns_moist_moisture = moisture;
 
-  Serial.print("Moisture: ");
-  Serial.println(moisture);
+  // Serial.print("Moisture: ");
+  // Serial.println(moisture);
 
 }

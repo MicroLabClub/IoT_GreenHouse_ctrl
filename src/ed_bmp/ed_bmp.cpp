@@ -31,7 +31,7 @@ float ed_bmp_pressure = 0;
 
 int ed_bmp_sensor_error = 0;
 
-float ed_bmp_GetTemperature(void)
+float ed_bmp_get_temperature(void)
 {
   return ed_bmp_temperature;
 }
@@ -63,15 +63,15 @@ void ed_bmp_loop()
   if (ed_bmp_sensor_error == 0)
   {
     ed_bmp_temperature = bmp.readTemperature();
-    Serial.print("ED BMP: Temperature = ");
-    Serial.print(ed_bmp_temperature);
-    Serial.println(" *C");
+    // Serial.print("ED BMP: Temperature = ");
+    // Serial.print(ed_bmp_temperature);
+    // Serial.println(" *C");
 
     ed_bmp_pressure = bmp.readPressure();
-    Serial.print("ED BMP: Pressure = ");
-    Serial.print(ed_bmp_pressure);
-    Serial.println(" Pa");
+    // Serial.print("ED BMP: Pressure = ");
+    // Serial.print(ed_bmp_pressure);
+    // Serial.println(" Pa");
 
-    Serial.println();
+    // Serial.println();
   }
 }

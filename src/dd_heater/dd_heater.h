@@ -13,7 +13,7 @@
 void dd_heater_setup();
 void dd_heater_loop();
 
-int dd_heater_on();
+int dd_heater_on( int time);
 int dd_heater_off();
 int dd_heater_get_state();
 int dd_heater_set_state (int state);

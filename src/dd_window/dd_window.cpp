@@ -19,11 +19,13 @@ void dd_window_setup()
 
 void dd_window_loop()
 {
-
-    if (--dd_window_op_cnt <= 0)
+    if(dd_window_op_cnt > -1) // if not continous
     {
-        dd_window_op_cnt = 0;
-        dd_window_state = DD_WINDOW_STOP;
+        if(--dd_window_op_cnt <= 0)// decrement
+        {
+            dd_window_op_cnt = 0;
+            dd_window_state = DD_WINDOW_STOP;//change to off
+        }
     }
 
     if (dd_window_state == DD_WINDOW_OPEN)
@@ -55,14 +57,14 @@ int8_t dd_window_stop()
 
 }
 
-int8_t dd_window_open(uint16_t time)
+int8_t dd_window_open(int time)
 {
     dd_window_op_cnt = time;
     dd_window_state = DD_WINDOW_OPEN;
     return dd_window_state;
 }
 
-int8_t dd_window_close(uint16_t time)
+int8_t dd_window_close(int time)
 {
     dd_window_op_cnt = time;
     dd_window_state = DD_WINDOW_CLOSE;

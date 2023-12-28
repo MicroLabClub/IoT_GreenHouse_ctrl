@@ -3,26 +3,26 @@
 #include "Arduino.h"
 
 int dd_heater_state;
-int dd_heater_relay = ED_RELAY_ID_5;
+int dd_heater_relay = ED_RELAY_ID_3;
 
-void dd_heater_setup()
+int dd_heater_op_cnt = 0;
+
+int dd_heater_set_state( int state)
 {
-    dd_heater_off();
+    if(state == DD_HEATER_ON)
+    {
+        dd_heater_state = DD_HEATER_ON;
+    }
+    else
+    {
+        dd_heater_state = DD_HEATER_OFF;
+    }
+    return dd_heater_state;
 }
 
-void dd_heater_loop()
+int dd_heater_get_gtate()
 {
-
-    uint8_t state = dd_heater_state;
-    size_t relay_id = dd_heater_relay;
-
-    ed_relay_setState(relay_id, state);
-}
-
-int dd_heater_on()
-{
-    int state = dd_heater_set_state( DD_HEATER_ON);
-    return state;
+    return dd_heater_state;
 }
 
 int dd_heater_off()
@@ -31,13 +31,38 @@ int dd_heater_off()
     return state;
 }
 
-int dd_heater_get_gtate()
+int dd_heater_on(uint16_t time)
 {
-    return dd_heater_state;
+    int state = dd_heater_set_state( DD_HEATER_ON);
+    dd_heater_op_cnt = time;
+    return state;
 }
 
-int dd_heater_set_state( int state)
+
+void dd_heater_setup()
 {
-    dd_heater_state = state;
-    return dd_heater_state;
+    dd_heater_off();
+}
+
+void dd_heater_loop()
+{
+    if(dd_heater_op_cnt > -1) // if not continous
+    {
+        if(--dd_heater_op_cnt <= 0)// decrement
+        {
+            dd_heater_op_cnt = 0;
+            dd_heater_state = DD_HEATER_OFF;//change to off
+        }
+    }
+
+    if(dd_heater_state == DD_HEATER_ON)
+    {
+        ed_relay_on(dd_heater_relay);
+    }
+    else
+    {
+        ed_relay_off(dd_heater_relay);
+        dd_heater_op_cnt = 0;
+        dd_heater_state = DD_HEATER_OFF;
+    }
 }

@@ -36,7 +36,22 @@ float ctrl_air_hum_setpoint_dn(float d_val)
 
 int8_t ctrl_air_hum_set_mode(int8_t mode)
 {
-  ctrl_air_hum_mode = mode;
+  if (mode == CTRL_AIR_HUM_DISABLE)
+  {
+    ctrl_air_hum_mode = CTRL_AIR_HUM_DISABLE;
+  }
+  else if (mode == CTRL_AIR_HUM_ENABLE)
+  {
+    ctrl_air_hum_mode = CTRL_AIR_HUM_ENABLE;
+  }
+  else
+  {
+    return -1;
+  }
+  return ctrl_air_hum_mode;
+}
+int8_t ctrl_air_hum_get_mode()
+{
   return ctrl_air_hum_mode;
 }
 int8_t ctrl_air_hum_set_mode_manual()
@@ -51,26 +66,22 @@ int8_t ctrl_air_hum_is_enabled()
 {
   return ctrl_air_hum_mode == CTRL_AIR_HUM_ENABLE;
 }
-int8_t ctrl_air_hum_get_mode()
-{
-  return ctrl_air_hum_mode;
-}
-
-void ctrl_air_hum_setup()
-{
-  ctrl_air_hum_setpoint = 19.0;
-  ctrl_air_hum_mode = CTRL_AIR_HUM_DISABLE;
-}
 
 float ctrl_air_hum_get_current_hum()
 {
   return srv_sns_air_GetHumidity();
 }
+
+void ctrl_air_hum_setup()
+{
+  ctrl_air_hum_setpoint = 60.0;
+  ctrl_air_hum_mode = CTRL_AIR_HUM_DISABLE;
+}
+
 void ctrl_air_hum_loop()
 {
   if (ctrl_air_hum_mode == CTRL_AIR_HUM_ENABLE)
   {
-
     if (srv_sns_air_GetHumidityError() == 0)
     {
       float hum_current = srv_sns_air_GetHumidity();

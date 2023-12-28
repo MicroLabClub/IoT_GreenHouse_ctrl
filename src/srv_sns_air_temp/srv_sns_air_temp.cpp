@@ -7,13 +7,13 @@ float srv_sns_air_temperature = 19.0;
 int srv_sns_air_temperature_error = 0;
 
 
-float srv_sns_air_GetTemperature(void)
+float srv_sns_air_get_temperature(void)
 {
   return srv_sns_air_temperature;
 }
 
 
-int srv_sns_air_GetTemperatureError(void)
+int srv_sns_air_get_temperature_error(void)
 {
   return srv_sns_air_temperature_error;
 }
@@ -41,15 +41,15 @@ float srv_sns_air_temp_cond(float temp);
 void srv_sns_air_temp_loop()
 {
 
-  if (ed_dht_GetTemperatureError())
+  if (ed_dht_get_temperature_error())
   {
-    Serial.println(F("SRV SNS Error reading temperature!"));
+    // Serial.println(F("SRV SNS Error reading temperature!"));
     srv_sns_air_temperature_error = 1;
   }
   else
   {
     srv_sns_air_temperature_error = 0;
-    float temp_raw = ed_dht_GetTemperature();
+    float temp_raw = ed_dht_get_temperature();
 
     // Serial.print(F("SRV SNS Temperature: "));
     // Serial.print(temp_raw);
