@@ -13,14 +13,14 @@
 #define ECU_ALL 0
 #define ECU_CTRL_TEMP_VENT 1
 #define ECU_CTRL_TEMP_HEAT 2
-#define ECU_CTRL_SOIL_MOISTURE 3
-#define ECU_CTRL_LIGHT 4
+#define ECU_CTRL_AIR_HUMIDITY 3
+#define ECU_CTRL_SOIL_MOISTURE 4
 #define ECU_CTRL_PRESS_ISOL 5
-#define ECU_CTRL_AIR_HUMIDITY 6
+#define ECU_CTRL_LIGHT 6
 
 //==============================================================================
 // Select configuration for ECU HERE !!
-#define ECU_CONFIG ECU_CTRL_LIGHT
+#define ECU_CONFIG ECU_CTRL_SOIL_MOISTURE
 //==============================================================================
 
 #if ECU_CONFIG == ECU_ALL
@@ -44,7 +44,7 @@
 
 #elif ECU_CONFIG == ECU_CTRL_SOIL_MOISTURE
 
-#include "ecu_config_ctrl_soil_moisture.h"
+#include "ecu_config_ctrl_soil_moist.h"
 
 #elif ECU_CONFIG == ECU_CTRL_AIR_HUMIDITY
 

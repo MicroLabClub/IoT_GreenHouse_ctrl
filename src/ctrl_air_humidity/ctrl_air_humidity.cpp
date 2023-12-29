@@ -2,10 +2,11 @@
 #include "srv_sns_air_hum/srv_sns_air_hum.h"
 #include "dd_valve/dd_valve.h"
 
-#include "Arduino.h"
 
-float ctrl_air_hum_setpoint = 60.0;
+
+float ctrl_air_hum_setpoint = CTRL_AIR_HUM_SP_DEFAULT;
 int8_t ctrl_air_hum_mode = CTRL_AIR_HUM_DISABLE;
+int8_t ctrl_air_hum_output = CTRL_AIR_HUM_OUT_OFF;
 
 float ctrl_air_hum_set_setpoint(float setpoint)
 {
@@ -66,10 +67,13 @@ int8_t ctrl_air_hum_is_enabled()
 {
   return ctrl_air_hum_mode == CTRL_AIR_HUM_ENABLE;
 }
-
 float ctrl_air_hum_get_current_hum()
 {
-  return srv_sns_air_GetHumidity();
+  return srv_sns_air_get_humidity();
+}
+int8_t ctrl_air_hum_get_output()
+{
+  return ctrl_air_hum_output;
 }
 
 void ctrl_air_hum_setup()
@@ -82,11 +86,11 @@ void ctrl_air_hum_loop()
 {
   if (ctrl_air_hum_mode == CTRL_AIR_HUM_ENABLE)
   {
-    if (srv_sns_air_GetHumidityError() == 0)
+    if (srv_sns_air_get_humidityError() == 0)
     {
-      float hum_current = srv_sns_air_GetHumidity();
-      int hum_off = ctrl_air_hum_setpoint + AIR_HUM_HISTERESIS;
-      int hum_on = ctrl_air_hum_setpoint - AIR_HUM_HISTERESIS;
+      float hum_current = srv_sns_air_get_humidity();
+      int hum_off = ctrl_air_hum_setpoint + CTRL_AIR_HUM_HISTERESIS;
+      int hum_on = ctrl_air_hum_setpoint - CTRL_AIR_HUM_HISTERESIS;
 
       // ON OFF Control cu Histereza
       if (hum_current > hum_off)
@@ -95,7 +99,7 @@ void ctrl_air_hum_loop()
       }
       else if (hum_current < hum_on)
       {
-        dd_valve_on(VALVE_OP_D_TIME);
+        dd_valve_on(CTRL_AIR_HUM_OP_D_TIME);
       }
       else
       {
@@ -106,5 +110,13 @@ void ctrl_air_hum_loop()
     {
       dd_valve_off();
     }
+  }
+  if(dd_valve_get_state() == DD_VALVE_ON)
+  {
+    ctrl_air_hum_output = CTRL_AIR_HUM_OUT_ON;
+  }
+  else
+  {
+    ctrl_air_hum_output = CTRL_AIR_HUM_OUT_OFF;
   }
 }

@@ -9,8 +9,8 @@
 #define USE_DD_LIGHTS
 #define USE_ED_RELAY
 
-#define USE_SRV_SNS_AMBIENT_LIGHT
-// #define USE_ED_BH1750
+#define USE_SRV_SNS_AMB_LIGHT
+#define USE_ED_BH1750
 
 #define USE_SRV_HERTBEAT
 
@@ -31,8 +31,8 @@
 #define ED_BH1750_REC (500 * TIME_uSEC)
 #define ED_BH1750_OFFSET (2.8 * TIME_SEC)
 
-#define SRV_SNS_AMBIENT_LIGHT_REC (200 * TIME_uSEC)
-#define SRV_SNS_AMBIENT_LIGHT_OFFSET (2.8 * TIME_SEC)
+#define SRV_SNS_AMB_LIGHT_REC (200 * TIME_uSEC)
+#define SRV_SNS_AMB_LIGHT_OFFSET (2.8 * TIME_SEC)
 
 #define CTRL_LIGHTS_REC (200 * TIME_uSEC)
 #define CTRL_LIGHTS_OFFSET (3.0 * TIME_SEC)
@@ -46,7 +46,7 @@
 //-------------------------------------------------------------------------
 
 
-#define DD_LIGHTS_OP_D_TIME (5.0 * TIME_SEC / DD_LIGHTS_REC)
+#define CTRL_LIGHTS_OP_D_TIME (5.0 * TIME_SEC / DD_LIGHTS_REC)
 #define CTRL_LIGHTS_HISTERESIS (5.0)
 #define CTRL_LIGHTS_CUR_DEFAULT (10.0)
 #define CTRL_LIGHTS_SP_DEFAULT (60.0)

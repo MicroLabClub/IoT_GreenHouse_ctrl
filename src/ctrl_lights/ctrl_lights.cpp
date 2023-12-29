@@ -2,10 +2,11 @@
 #include "srv_sns_amb_light/srv_sns_amb_light.h"
 #include "dd_lights/dd_lights.h"
 
-#include "Arduino.h"
+
 
 float ctrl_lights_setpoint = CTRL_LIGHTS_SP_DEFAULT;
 int8_t ctrl_lights_mode = CTRL_LIGHTS_DISABLE;
+int8_t ctrl_lights_output = CTRL_LIGHTS_OUT_OFF;
 
 float ctrl_lights_set_setpoint(float setpoint)
 {
@@ -70,7 +71,10 @@ float ctrl_lights_get_current_light()
 {
   return srv_sns_amb_get_luminozity();
 }
-
+int8_t ctrl_lights_get_output()
+{
+  return ctrl_lights_output;
+}
 
 void ctrl_lights_setup()
 {
@@ -78,38 +82,44 @@ void ctrl_lights_setup()
   ctrl_lights_mode = CTRL_LIGHTS_DISABLE;
 }
 
-
 void ctrl_lights_loop()
 {
 
   if (ctrl_lights_mode == CTRL_LIGHTS_ENABLE)
   {
-   if (srv_sns_amb_get_luminozity_error() == 0)
-  {
-
-    float lihts_current = ctrl_lights_get_current_light();
-   
-
-    int lihts_off = ctrl_lights_setpoint + LIGHTS_HISTERESIS;
-    int lihts_on = ctrl_lights_setpoint - LIGHTS_HISTERESIS;
-
-    // ON OFF Control cu Histereza
-    if (lihts_current > lihts_off)
+    if (srv_sns_amb_get_luminozity_error() == 0)
     {
-      dd_lights_off();
-    }
-    else if (lihts_current < lihts_on)
-    {
-      dd_lights_on(DD_LIGHT_OP_D_TIME);
+
+      float light_current = ctrl_lights_get_current_light();
+
+      int light_off = ctrl_lights_setpoint + CTRL_LIGHTS_HISTERESIS;
+      int light_on = ctrl_lights_setpoint - CTRL_LIGHTS_HISTERESIS;
+
+      // ON OFF Control cu Histereza
+      if (light_current > light_off)
+      {
+        dd_lights_off();
+      }
+      else if (light_current < light_on)
+      {
+        dd_lights_on(CTRL_LIGHTS_OP_D_TIME);
+      }
+      else
+      {
+        // do nothing
+      }
     }
     else
     {
-      // do nothing
+      dd_lights_off();
     }
+  }
+  if (dd_lights_get_gtate() == DD_LIGHTS_ON)
+  {
+    ctrl_lights_output = CTRL_LIGHTS_OUT_ON;
   }
   else
   {
-    dd_lights_off();
-  }
+    ctrl_lights_output = CTRL_LIGHTS_OUT_OFF;
   }
 }

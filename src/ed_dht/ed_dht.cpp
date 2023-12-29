@@ -41,7 +41,7 @@ float ed_dht_get_temperature(void)
   return ed_dht_temperature;
 }
 
-float ed_dht_GetHumidity(void)
+float ed_dht_get_humidity(void)
 {
   return ed_dht_humidity;
 }
@@ -51,7 +51,7 @@ int ed_dht_get_temperature_error(void)
   return ed_dht_temperature_error;
 }
 
-int ed_dht_GetHumidityError(void)
+int ed_dht_get_humidityError(void)
 {
   return ed_dht_humidity_error;
 }

@@ -149,12 +149,12 @@
 #endif
 #endif
 
-#ifdef USE_ED_SNS_MOIST
-#ifndef ED_SNS_MOIST_REC
-#define ED_SNS_MOIST_REC (100 )
+#ifdef USE_ed_sns_soil_moist
+#ifndef ed_sns_soil_moist_REC
+#define ed_sns_soil_moist_REC (100 )
 #endif
-#ifndef ED_SNS_MOIST_OFFSET
-#define ED_SNS_MOIST_OFFSET 3
+#ifndef ed_sns_soil_moist_OFFSET
+#define ed_sns_soil_moist_OFFSET 3
 #endif
 #endif
 

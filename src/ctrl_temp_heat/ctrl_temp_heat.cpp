@@ -6,6 +6,7 @@
 
 float ctrl_temp_heat_setpoint = 19.0;
 int8_t ctrl_temp_heat_mode = CTRL_TEMP_HEAT_DISABLE;
+int8_t ctrl_temp_heat_output = CTRL_TEMP_HEAT_OUT_OFF;
 
 float ctrl_temp_heat_set_setpoint(float setpoint)
 {
@@ -70,6 +71,10 @@ float ctrl_temp_heat_get_current_temp()
 {
   return srv_sns_air_get_temperature();
 }
+int8_t ctrl_temp_heat_get_output()
+{
+  return ctrl_temp_heat_output;
+}
 
 void ctrl_temp_heat_setup()
 {
@@ -84,8 +89,8 @@ void ctrl_temp_heat_loop()
     if (srv_sns_air_get_temperature_error() == 0)
     {
       float temp_current = srv_sns_air_get_temperature();
-      int temp_off = ctrl_temp_heat_setpoint + TEMP_HEAT_HISTERESIS;
-      int temp_on = ctrl_temp_heat_setpoint - TEMP_HEAT_HISTERESIS;
+      int temp_off = ctrl_temp_heat_setpoint + CTRL_TEMP_HEAT_HISTERESIS;
+      int temp_on = ctrl_temp_heat_setpoint - CTRL_TEMP_HEAT_HISTERESIS;
 
       // ON OFF Control cu Histereza
       if (temp_current > temp_off)
@@ -94,7 +99,7 @@ void ctrl_temp_heat_loop()
       }
       else if (temp_current < temp_on)
       {
-        dd_heater_on( DD_HEAT_OP_D_TIME);
+        dd_heater_on( CTRL_TEMP_HEAT_OP_D_TIME);
       }
       else
       {
@@ -106,4 +111,12 @@ void ctrl_temp_heat_loop()
       dd_heater_off();
     }
   }
+  if(dd_heater_get_state() == DD_HEATER_ON)
+  {
+    ctrl_temp_heat_output = CTRL_TEMP_HEAT_OUT_ON;
+  }
+  else
+  {
+    ctrl_temp_heat_output = CTRL_TEMP_HEAT_OUT_OFF;
+  } 
 }

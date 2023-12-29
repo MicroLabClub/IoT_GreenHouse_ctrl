@@ -40,8 +40,8 @@
 
 
 #define DD_WIN_OP_D_TIME (0.05 * TIME_SEC / DD_WINDOW_REC)
-#define TEMP_VENT_HISTERESIS (0.5)
-#define TEMP_DEFAULT (10.0)
+#define CTRL_TEMP_VENT_HISTERESIS (0.5)
+#define CTRL_TEMP_VENT_TEMP_DEFAULT (10.0)
 
 #define DHT_PIN 4      // Digital pin connected to the DHT sensor 
 #define SRV_BLINK_LED_PIN 5

@@ -59,7 +59,7 @@ void srv_ui_serial_in_loop()
       }
       else
       {
-        dd_window_open(2 * TIME_SEC);
+        dd_window_open(CTRL_TEMP_VENT_OP_D_TIME);
         Serial.println("CTRL_TEMP_VENT: Manual Window opening");
       }
 #elif defined USE_DD_WINDOW
@@ -85,7 +85,7 @@ void srv_ui_serial_in_loop()
       }
       else
       {
-        dd_window_close(2 * TIME_SEC);
+        dd_window_close(CTRL_TEMP_VENT_OP_D_TIME);
         Serial.println(" DD_WINDOW: Window Closing");
       }
 #elif defined USE_DD_WINDOW
@@ -134,11 +134,11 @@ void srv_ui_serial_in_loop()
       }
       else
       {
-        dd_heater_on(DD_HEAT_OP_D_TIME);
+        dd_heater_on(CTRL_TEMP_HEAT_OP_D_TIME);
         Serial.println("CTRL_TEMP_HEAT: Manual Heater ON");
       }
 #elif defined USE_DD_HEATER
-      dd_heater_on(DD_HEAT_OP_D_TIME);
+      dd_heater_on(CTRL_TEMP_HEAT_OP_D_TIME);
       Serial.println("DD_HEATER: Heater ON");
 #elif defined USE_ED_RELAY
       ed_relay_on(ED_RELAY_ID_3);
@@ -186,7 +186,7 @@ void srv_ui_serial_in_loop()
         ctrl_air_hum_set_mode_auto();
       }
 #elif defined USE_DD_VALVE
-      dd_valve_stop();
+      dd_valve_off();
       Serial.println("DD_VALVE: STOP Command");
 #elif defined USE_ED_RELAY
       Serial.println("DD_RELAY: STOP Command");
@@ -206,14 +206,14 @@ void srv_ui_serial_in_loop()
       }
       else
       {
-        dd_valve_on(DD_HUM_OP_D_TIME);
+        dd_valve_on(CTRL_AIR_HUM_OP_D_TIME);
         Serial.println("CTRL_AIR_HUM: Manual Valve opening");
       }
 #elif defined USE_DD_VALVE
-      dd_valve_on(DD_HUM_OP_D_TIME);
+      dd_valve_on(4 * TIME_SEC / DD_VALVE_REC);
       Serial.println("DD_VALVE: Valve opening");
 #elif defined USE_ED_RELAY
-      ed_relay_on(ED_RELAY_ID_3);
+      ed_relay_on(ED_RELAY_ID_4);
       Serial.println("DD_VALVE: Valve opening");
 #else
       Serial.println("CTRL_AIR_HUM: OPEN/SP_Up Command <no action>");
@@ -235,10 +235,10 @@ void srv_ui_serial_in_loop()
         Serial.println(" DD_VALVE: Valve Closing");
       }
 #elif defined USE_DD_VALVE
-      dd_valve_off(4 * TIME_SEC / DD_VALVE_REC);
+      dd_valve_off();
       Serial.println("DD_VALVE: Valve closing");
 #elif defined USE_ED_RELAY
-      ed_relay_off(ED_RELAY_ID_3);
+      ed_relay_off(ED_RELAY_ID_4);
       Serial.println(" ED_RELAY: Valve Closing");
 #else
       Serial.println("CTRL_AIR_HUM: CLOSE/SP_Dn Command <no action>");
@@ -260,11 +260,11 @@ void srv_ui_serial_in_loop()
         ctrl_soil_moist_set_mode_auto();
       }
 #elif defined USE_DD_VALVE
-      dd_valve_stop();
+      dd_valve_off();
       Serial.println("DD_VALVE: STOP Command");
 #elif defined USE_ED_RELAY
       Serial.println("DD_RELAY: STOP Command");
-      ed_relay_off(ED_RELAY_ID_3);
+      ed_relay_off(ED_RELAY_ID_5);
 #else
       Serial.println("CTRL_SOIL_MOIST: AUTO/MANUAL/STOP Command <no action>");
 #endif
@@ -273,21 +273,21 @@ void srv_ui_serial_in_loop()
 #if defined USE_CTRL_SOIL_MOIST
       if (ctrl_soil_moist_is_enabled())
       {
-        ctrl_soil_moist_set_threshold_up(0.1);
+        ctrl_soil_moist_setpoint_up(0.1);
         Serial.print("CTRL_SOIL_MOIST: Increase Threshold:");
-        float threshold = ctrl_soil_moist_get_threshold();
+        float threshold = ctrl_soil_moist_get_setpoint();
         Serial.println(threshold);
       }
       else
       {
-        valve_open();
+        dd_valve_on(CTRL_SOIL_MOIST_OP_D_TIME);
         Serial.println("CTRL_SOIL_MOIST: Valve opening");
       }
 #elif defined USE_DD_VALVE
-      valve_open();
+      dd_valve_on(DD_VALVE_OP_D_TIME);
       Serial.println("DD_VALVE: Valve opening");
 #elif defined USE_ED_RELAY
-      ed_relay_on(ED_RELAY_ID_3);
+      ed_relay_on(ED_RELAY_ID_5);
       Serial.println("DD_VALVE: Valve opening");
 #else
       Serial.println("CTRL_SOIL_MOIST: OPEN/Threshold_Up Command <no action>");
@@ -298,21 +298,21 @@ void srv_ui_serial_in_loop()
 #if defined USE_CTRL_SOIL_MOIST
       if (ctrl_soil_moist_is_enabled())
       {
-        ctrl_soil_moist_set_threshold_down(0.1);
+        ctrl_soil_moist_setpoint_up(0.1);
         Serial.print("CTRL_SOIL_MOIST: Decreasing Threshold:");
-        float threshold = ctrl_soil_moist_get_threshold();
+        float threshold = ctrl_soil_moist_get_setpoint();
         Serial.println(threshold);
       }
       else
       {
-        valve_close();
+        dd_valve_off();
         Serial.println(" DD_VALVE: Valve Closing");
       }
 #elif defined USE_DD_VALVE
-      valve_close();
+      dd_valve_off();
       Serial.println("DD_VALVE: Valve closing");
 #elif defined USE_ED_RELAY
-      ed_relay_off(ED_RELAY_ID_3);
+      ed_relay_off(ED_RELAY_ID_5);
       Serial.println(" ED_RELAY: Valve Closing");
 #else
       Serial.println("CTRL_SOIL_MOIST: CLOSE/Threshold_Down Command <no action>");
@@ -336,7 +336,7 @@ void srv_ui_serial_in_loop()
       Serial.println("DD_AIR_PUMP: STOP Command");
 #elif defined USE_ED_RELAY
       Serial.println("DD_RELAY: STOP Command");
-      ed_relay_off(ED_RELAY_ID_8);
+      ed_relay_off(ED_RELAY_ID_6);
 #else
       Serial.println("CTRL_PRESS_ISOL: AUTO/MANUAL/STOP Command <no action>");
 #endif
@@ -359,7 +359,7 @@ void srv_ui_serial_in_loop()
       dd_air_pump_on(DD_AIR_PUMP_OP_D_TIME);
       Serial.println("DD_AIR_PUMP: Air_pump ON");
 #elif defined USE_ED_RELAY
-      ed_relay_on(ED_RELAY_ID_8);
+      ed_relay_on(ED_RELAY_ID_6);
       Serial.println("DD_RELAY: Air_pump ON");
 #else
       Serial.println("CTRL_PRESS_ISOL: Light_ON/SP_Up Command <no action>");
@@ -384,7 +384,7 @@ void srv_ui_serial_in_loop()
       dd_air_pump_off();
       Serial.println("DD_AIR_PUMP: Press_isol OFF");
 #elif defined USE_ED_RELAY
-      ed_relay_off(ED_RELAY_ID_8);
+      ed_relay_off(ED_RELAY_ID_6);
       Serial.println(" ED_RELAY: Press_isol OFF");
 #else
       Serial.println("CTRL_PRESS_ISOL: Light_OFF/SP_Dn Command <no action>");
@@ -424,11 +424,11 @@ void srv_ui_serial_in_loop()
       }
       else
       {
-        dd_lights_on(DD_LIGHT_OP_D_TIME);
+        dd_lights_on(-1);
         Serial.println("CTRL_LIGHTS: Manual Lights ON");
       }
 #elif defined USE_DD_LIGHTS
-      dd_lights_on(DD_LIGHT_OP_D_TIME);
+      dd_lights_on(CTRL_LIGHTS_OP_D_TIME);
       Serial.println("DD_LIGHTS: Lights ON");
 #elif defined USE_ED_RELAY
       ed_relay_on(ED_RELAY_ID_8);
@@ -506,11 +506,11 @@ void ctrl_temp_vent_report()
   Serial.print(F("°C "));
 
   Serial.print(F("HIST[OP: "));
-  Serial.print(temp_setpoint + TEMP_VENT_HISTERESIS);
+  Serial.print(temp_setpoint + CTRL_TEMP_VENT_HISTERESIS);
   Serial.print(F("°C  "));
 
   Serial.print(F("CL: "));
-  Serial.print(temp_setpoint - TEMP_VENT_HISTERESIS);
+  Serial.print(temp_setpoint - CTRL_TEMP_VENT_HISTERESIS);
   Serial.print(F("°C] "));
 
   float temp_current = ctrl_temp_vent_get_current_temp();
@@ -541,11 +541,11 @@ void ctrl_temp_heat_report()
   Serial.print(F("°C "));
 
   Serial.print(F("HIST[OP: "));
-  Serial.print(temp_setpoint + TEMP_HEAT_HISTERESIS);
+  Serial.print(temp_setpoint + CTRL_TEMP_HEAT_HISTERESIS);
   Serial.print(F("°C  "));
 
   Serial.print(F("CL: "));
-  Serial.print(temp_setpoint - TEMP_HEAT_HISTERESIS);
+  Serial.print(temp_setpoint - CTRL_TEMP_HEAT_HISTERESIS);
   Serial.print(F("°C] "));
 
   float temp_current = ctrl_temp_heat_get_current_temp();
@@ -582,11 +582,11 @@ void ctrl_lights_report()
   Serial.print(F(" lx "));
 
   Serial.print(F("HIST[OP: "));
-  Serial.print(light_setpoint + LIGHTS_HISTERESIS);
+  Serial.print(light_setpoint + CTRL_LIGHTS_HISTERESIS);
   Serial.print(F(" lx  "));
 
   Serial.print(F("CL: "));
-  Serial.print(light_setpoint - LIGHTS_HISTERESIS);
+  Serial.print(light_setpoint - CTRL_LIGHTS_HISTERESIS);
   Serial.print(F(" lx] "));
 
   Serial.println();
@@ -701,11 +701,11 @@ void srv_ui_serial_ctrl_temp_heat_report()
   Serial.print(F("°C "));
 
   Serial.print(F("HIST[OP: "));
-  Serial.print(temp_setpoint + TEMP_HEAT_HISTERESIS);
+  Serial.print(temp_setpoint + CTRL_TEMP_HEAT_HISTERESIS);
   Serial.print(F("°C  "));
 
   Serial.print(F("CL: "));
-  Serial.print(temp_setpoint - TEMP_HEAT_HISTERESIS);
+  Serial.print(temp_setpoint - CTRL_TEMP_HEAT_HISTERESIS);
   Serial.print(F("°C] "));
 
   float temp_current = ctrl_temp_heat_get_current_temp();
@@ -734,11 +734,11 @@ void srv_ui_serial_ctrl_air_hum_report()
   Serial.print(F("% "));
 
   Serial.print(F("HIST[OP: "));
-  Serial.print(hum_setpoint + AIR_HUM_HISTERESIS);
+  Serial.print(hum_setpoint + CTRL_AIR_HUM_HISTERESIS);
   Serial.print(F("%  "));
 
   Serial.print(F("CL: "));
-  Serial.print(hum_setpoint - AIR_HUM_HISTERESIS);
+  Serial.print(hum_setpoint - CTRL_AIR_HUM_HISTERESIS);
   Serial.print(F("%] "));
 
   float hum_current = ctrl_air_hum_get_current_hum();

@@ -4,12 +4,16 @@
 
 #include "stdint.h"
 
-#ifndef TEMP_VENT_HISTERESIS
-#define TEMP_VENT_HISTERESIS (0.5)
+#ifndef CTRL_TEMP_VENT_HISTERESIS
+#define CTRL_TEMP_VENT_HISTERESIS (0.5)
 #endif
 
-#ifndef DD_WIN_OP_D_TIME
-#define DD_WIN_OP_D_TIME 10
+#ifndef CTRL_TEMP_VENT_OP_D_TIME
+#define CTRL_TEMP_VENT_OP_D_TIME (10.0)
+#endif
+
+#ifndef CTRL_TEMP_VENT_SP_DEFAULT
+#define CTRL_TEMP_VENT_SP_DEFAULT (19.0)
 #endif
 
 #define CTRL_TEMP_VENT_DISABLE 0
@@ -25,12 +29,11 @@ int8_t ctrl_temp_vent_set_mode_auto();
 int8_t ctrl_temp_vent_get_mode();
 int8_t ctrl_temp_vent_is_enabled();
 
+float ctrl_temp_vent_get_current_temp();
 float ctrl_temp_vent_set_setpoint(float setpoint);
 float ctrl_temp_vent_get_setpoint();
 float ctrl_temp_vent_setpoint_up(float d_val);
 float ctrl_temp_vent_setpoint_dn(float d_val);
-
-float ctrl_temp_vent_get_current_temp();
-
+int8_t ctrl_temp_vent_get_output();
 
 #endif

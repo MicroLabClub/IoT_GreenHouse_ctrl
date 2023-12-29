@@ -15,7 +15,7 @@ void dd_lights_loop();
 
 int dd_lights_on( int time);
 int dd_lights_off();
-int dd_lights_get_state();
+int dd_lights_get_gtate();
 int dd_lights_set_state (int state);
 
 #endif

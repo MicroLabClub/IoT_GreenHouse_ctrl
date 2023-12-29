@@ -2,10 +2,12 @@
 #include "srv_sns_air_temp/srv_sns_air_temp.h"
 #include "dd_window/dd_window.h"
 
-#include "Arduino.h"
 
-float ctrl_temp_vent_setpoint = 19.0;
+
+float ctrl_temp_vent_setpoint = CTRL_TEMP_VENT_SP_DEFAULT;
 int8_t ctrl_temp_vent_mode = CTRL_TEMP_VENT_DISABLE;
+int8_t ctrl_temp_vent_output = DD_WINDOW_UNKNOWN;
+
 
 float ctrl_temp_vent_set_setpoint(float setpoint)
 {
@@ -71,10 +73,14 @@ float ctrl_temp_vent_get_current_temp()
 {
   return srv_sns_air_get_temperature();
 }
+int8_t ctrl_temp_vent_get_output()
+{
+  return ctrl_temp_vent_output;
+}
 
 void ctrl_temp_vent_setup()
 {
-  ctrl_temp_vent_setpoint = 19.0;
+  ctrl_temp_vent_setpoint = CTRL_TEMP_VENT_SP_DEFAULT;
   ctrl_temp_vent_mode = CTRL_TEMP_VENT_DISABLE;
 }
 
@@ -85,17 +91,17 @@ void ctrl_temp_vent_loop()
     if (srv_sns_air_get_temperature_error() == 0)
     {
       float temp_current = srv_sns_air_get_temperature();
-      float temp_open = ctrl_temp_vent_setpoint + TEMP_VENT_HISTERESIS;
-      float temp_close = ctrl_temp_vent_setpoint - TEMP_VENT_HISTERESIS;
+      float temp_open = ctrl_temp_vent_setpoint + CTRL_TEMP_VENT_HISTERESIS;
+      float temp_close = ctrl_temp_vent_setpoint - CTRL_TEMP_VENT_HISTERESIS;
 
       // OPEN/CLOSE Control cu Histereza
       if (temp_current > temp_open)
       {
-        dd_window_open(DD_WIN_OP_D_TIME);
+        dd_window_open(CTRL_TEMP_VENT_OP_D_TIME);
       }
       else if (temp_current < temp_close)
       {
-        dd_window_close(DD_WIN_OP_D_TIME);
+        dd_window_close(CTRL_TEMP_VENT_OP_D_TIME);
       }
       else
       {
@@ -107,4 +113,6 @@ void ctrl_temp_vent_loop()
       dd_window_stop();
     }
   }
+  ctrl_temp_vent_output = dd_window_get_state();
+
 }

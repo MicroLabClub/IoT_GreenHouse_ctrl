@@ -4,8 +4,6 @@
 #include "Arduino.h"
 #include "ed_relay/ed_relay.h"
 
-
-
 #define DD_VALVE_ON    ED_RELAY_ON
 #define DD_VALVE_OFF   ED_RELAY_OFF
 

@@ -20,7 +20,8 @@ int dd_valve_set_state(int state)
     return dd_valve_state;
 }
 
-int dd_valve_get_gtate()
+
+int dd_valve_get_state()
 {
     return dd_valve_state;
 }

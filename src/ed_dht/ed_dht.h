@@ -11,8 +11,8 @@ void ed_dht_setup();
 void ed_dht_loop();
 
 float ed_dht_get_temperature(void);
-float ed_dht_GetHumidity(void);
+float ed_dht_get_humidity(void);
 int ed_dht_get_temperature_error(void);
-int ed_dht_GetHumidityError(void);
+int ed_dht_get_humidityError(void);
 
 #endif

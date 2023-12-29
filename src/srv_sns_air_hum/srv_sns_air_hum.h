@@ -5,8 +5,8 @@
 void srv_sns_air_hum_setup();
 void srv_sns_air_hum_loop();
 
-float srv_sns_air_GetHumidity(void);
-int srv_sns_air_GetHumidityError(void);
+float srv_sns_air_get_humidity(void);
+int srv_sns_air_get_humidityError(void);
 
 
 #endif

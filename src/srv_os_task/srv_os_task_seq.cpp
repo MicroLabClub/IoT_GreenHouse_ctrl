@@ -58,8 +58,8 @@ int ed_dht_rec_cnt = ED_DHT_OFFSET;
 int ed_bmp_rec_cnt = ED_BMP_OFFSET;
 #endif
 
-#ifdef USE_ED_SNS_MOIST
-int ed_sns_moist_rec_cnt = ED_SNS_MOIST_OFFSET;
+#ifdef USE_ed_sns_soil_moist
+int ed_sns_soil_moist_rec_cnt = ed_sns_soil_moist_OFFSET;
 #endif
 
 // Actuators definitions
@@ -123,8 +123,8 @@ void srv_os_task_seq_setup()
 #ifdef USE_ED_RELAY
   ed_relay_setup();
 #endif
-#ifdef USE_ED_SN_MOIST
-  ed_sns_moist_setup();
+#ifdef USE_ED_SNS_MOIST
+  ed_sns_soil_moist_setup();
 #endif
 
   // initialize device drivers
@@ -283,12 +283,12 @@ void srv_os_task_seq_scheduler()
     ed_bmp_rec_cnt = ED_BMP_REC;
   }
 #endif
-#ifdef USE_ED_SNS_MOIST
+#ifdef USE_ed_sns_soil_moist
   // Task for collecting data from the soil moisture sensor
-  if (--ed_sns_moist_rec_cnt <= 0)
+  if (--ed_sns_soil_moist_rec_cnt <= 0)
   {
-    ed_sns_moist_loop();
-    ed_sns_moist_rec_cnt = ED_SNS_MOIST_REC;
+    ed_sns_soil_moist_loop();
+    ed_sns_soil_moist_rec_cnt = ed_sns_soil_moist_REC;
   }
 #endif
 #ifdef USE_DD_HEATER

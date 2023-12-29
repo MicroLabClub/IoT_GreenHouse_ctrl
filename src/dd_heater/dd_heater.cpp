@@ -20,7 +20,7 @@ int dd_heater_set_state( int state)
     return dd_heater_state;
 }
 
-int dd_heater_get_gtate()
+int dd_heater_get_state()
 {
     return dd_heater_state;
 }
@@ -31,7 +31,7 @@ int dd_heater_off()
     return state;
 }
 
-int dd_heater_on(uint16_t time)
+int dd_heater_on(int time)
 {
     int state = dd_heater_set_state( DD_HEATER_ON);
     dd_heater_op_cnt = time;

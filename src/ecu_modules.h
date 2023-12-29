@@ -62,7 +62,7 @@
 #include "srv_sns_soil_moist/srv_sns_soil_moist.h"
 #endif
 //-----------------------------------------------------------------------------
-#ifdef USE_SRV_SNS_AMBIENT_LIGHT
+#ifdef USE_SRV_SNS_AMB_LIGHT
 #include "srv_sns_amb_light/srv_sns_amb_light.h"
 #endif
 
@@ -95,8 +95,8 @@
 #ifdef USE_ED_BMP
 #include "ed_bmp/ed_bmp.h"
 #endif
-#ifdef USE_ED_SN_MOIST
-#include "ed_sns_moist/ed_sns_moist.h"
+#ifdef USE_ED_SNS_MOIST
+#include "ed_sns_soil_moist/ed_sns_soil_moist.h"
 #endif
 #ifdef USE_ED_BH1750
 #include "ed_bh1750/ed_bh1750.h"

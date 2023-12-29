@@ -22,7 +22,7 @@ void srv_sns_air_temp_task(void *pvParameters);
 void srv_sns_air_hum_task(void *pvParameters);
 void srv_sns_soil_moist_task(void *pvParameters);
 void srv_sns_press_task(void *pvParameters);
-void srv_sns_ambient_light_task(void *pvParameters);
+void srv_sns_AMB_LIGHT_task(void *pvParameters);
 
 // Actuator modules
 void dd_window_task(void *pvParameters);
@@ -34,7 +34,7 @@ void dd_lights_task(void *pvParameters);
 
 // ECU modules
 void ed_dht_task(void *pvParameters);
-void ed_sns_moist_task(void *pvParameters);
+void ed_sns_soil_moist_task(void *pvParameters);
 void ed_bmp_task(void *pvParameters);
 void ed_bh1750_task(void *pvParameters);
 void ed_relay_task(void *pvParameters);
@@ -102,8 +102,8 @@ void srv_os_task_freertos_setup()
 #ifdef USE_SRV_SNS_PRESS
     xTaskCreate(srv_sns_press_task, "srv_sns_press_task", 1024, NULL, 1, NULL);
 #endif
-#ifdef USE_SRV_SNS_AMBIENT_LIGHT
-    xTaskCreate(srv_sns_ambient_light_task, "srv_sns_ambient_light_task", 1024, NULL, 1, NULL);
+#ifdef USE_SRV_SNS_AMB_LIGHT
+    xTaskCreate(srv_sns_AMB_LIGHT_task, "srv_sns_AMB_LIGHT_task", 1024, NULL, 1, NULL);
 #endif
 //---------------------------------------------------------------------------------------------
 // Actuator modules
@@ -131,8 +131,8 @@ void srv_os_task_freertos_setup()
 #ifdef USE_ED_DHT
     xTaskCreate(ed_dht_task, "ed_dht_task", 2024, NULL, 1, NULL);
 #endif
-#ifdef USE_ED_SNS_MOIST
-    xTaskCreate(ed_sns_moist_task, "ed_sns_moist_task", 1024, NULL, 1, NULL);
+#ifdef USE_ed_sns_soil_moist
+    xTaskCreate(ed_sns_soil_moist_task, "ed_sns_soil_moist_task", 1024, NULL, 1, NULL);
 #endif
 #ifdef USE_ED_BMP
     xTaskCreate(ed_bmp_task, "ed_bmp_task", 1024, NULL, 1, NULL);
@@ -400,17 +400,17 @@ void srv_sns_press_task(void *pvParameters)
 
 //-----------------------------------------------------------------------------
 // Task for collecting data from the ambient light sensor
-#ifdef USE_SRV_SNS_AMBIENT_LIGHT
-void srv_sns_ambient_light_task(void *pvParameters)
+#ifdef USE_SRV_SNS_AMB_LIGHT
+void srv_sns_AMB_LIGHT_task(void *pvParameters)
 {
     srv_sns_amb_light_setup();
-    vTaskDelay(SRV_SNS_AMBIENT_LIGHT_OFFSET / portTICK_PERIOD_MS);
+    vTaskDelay(SRV_SNS_AMB_LIGHT_OFFSET / portTICK_PERIOD_MS);
     TickType_t xLastWakeTime = xTaskGetTickCount();
 
     for (;;)
     {
         srv_sns_amb_light_loop();
-        vTaskDelayUntil(&xLastWakeTime, SRV_SNS_AMBIENT_LIGHT_REC / portTICK_PERIOD_MS);
+        vTaskDelayUntil(&xLastWakeTime, SRV_SNS_AMB_LIGHT_REC / portTICK_PERIOD_MS);
     }
 }
 #endif
@@ -510,17 +510,17 @@ void ed_dht_task(void *pvParameters)
 
 //-----------------------------------------------------------------------------
 // Task for collecting data from the soil moisture sensor
-#ifdef USE_ED_SNS_MOIST
-void ed_sns_moist_task(void *pvParameters)
+#ifdef USE_ed_sns_soil_moist
+void ed_sns_soil_moist_task(void *pvParameters)
 {
-    ed_sns_moist_setup();
-    vTaskDelay(ED_SNS_MOIST_OFFSET / portTICK_PERIOD_MS);
+    ed_sns_soil_moist_setup();
+    vTaskDelay(ed_sns_soil_moist_OFFSET / portTICK_PERIOD_MS);
     TickType_t xLastWakeTime = xTaskGetTickCount();
 
     for (;;)
     {
-        ed_sns_moist_loop();
-        vTaskDelayUntil(&xLastWakeTime, ED_SNS_MOIST_REC / portTICK_PERIOD_MS);
+        ed_sns_soil_moist_loop();
+        vTaskDelayUntil(&xLastWakeTime, ed_sns_soil_moist_REC / portTICK_PERIOD_MS);
     }
 }
 #endif
