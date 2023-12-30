@@ -13,9 +13,9 @@
 #define ECU_ALL 0
 #define ECU_CTRL_TEMP_VENT 1
 #define ECU_CTRL_TEMP_HEAT 2
-#define ECU_CTRL_AIR_HUMIDITY 3
+#define ECU_CTRL_AIR_HUM 3
 #define ECU_CTRL_SOIL_MOISTURE 4
-#define ECU_CTRL_PRESS_ISOL 5
+#define ECU_CTRL_AIR_PRESS 5
 #define ECU_CTRL_LIGHT 6
 
 //==============================================================================
@@ -38,15 +38,15 @@
 
 #include "ecu_config_ctrl_lights.h"
 
-#elif ECU_CONFIG == ECU_CTRL_PRESS_ISOL
+#elif ECU_CONFIG == ECU_CTRL_AIR_PRESS
 
-#include "ecu_config_ctrl_press_isol.h"
+#include "ecu_config_ctrl_air_press.h"
 
 #elif ECU_CONFIG == ECU_CTRL_SOIL_MOISTURE
 
 #include "ecu_config_ctrl_soil_moist.h"
 
-#elif ECU_CONFIG == ECU_CTRL_AIR_HUMIDITY
+#elif ECU_CONFIG == ECU_CTRL_AIR_HUM
 
 #include "ecu_config_ctrl_air_hum.h"
 

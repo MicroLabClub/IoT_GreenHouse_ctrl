@@ -20,7 +20,7 @@ int dd_air_pump_set_state(int state)
     return dd_air_pump_state;
 }
 
-int dd_air_pump_get_gtate()
+int dd_air_pump_get_state()
 {
     return dd_air_pump_state;
 }

@@ -9,7 +9,7 @@ void ctrl_temp_heat_task(void *pvParameters);
 void ctrl_air_hum_task(void *pvParameters);
 void ctrl_soil_moist_task(void *pvParameters);
 void ctrl_lights_task(void *pvParameters);
-void ctrl_press_isol_task(void *pvParameters);
+void ctrl_air_press_task(void *pvParameters);
 
 // Service modules
 void srv_heartbeat_task(void *pvParameters);
@@ -21,8 +21,8 @@ void srv_com_mqtt_task(void *pvParameters);
 void srv_sns_air_temp_task(void *pvParameters);
 void srv_sns_air_hum_task(void *pvParameters);
 void srv_sns_soil_moist_task(void *pvParameters);
-void srv_sns_press_task(void *pvParameters);
-void srv_sns_AMB_LIGHT_task(void *pvParameters);
+void srv_sns_air_press_task(void *pvParameters);
+void srv_sns_amb_light_task(void *pvParameters);
 
 // Actuator modules
 void dd_window_task(void *pvParameters);
@@ -71,8 +71,8 @@ void srv_os_task_freertos_setup()
 #ifdef USE_CTRL_SOIL_MOIST
     xTaskCreate(ctrl_soil_moist_task, "ctrl_soil_moist_task", 1024, NULL, 1, NULL);
 #endif
-#ifdef USE_CTRL_PRESS_ISOL
-    xTaskCreate(ctrl_press_isol_task, "ctrl_press_isol_task", 1024, NULL, 1, NULL);
+#ifdef USE_CTRL_AIR_PRESS
+    xTaskCreate(ctrl_air_press_task, "ctrl_air_press_task", 1024, NULL, 1, NULL);
 #endif
 #ifdef USE_CTRL_LIGHTS
     xTaskCreate(ctrl_lights_task, "ctrl_lights_task", 1024, NULL, 1, NULL);
@@ -99,11 +99,11 @@ void srv_os_task_freertos_setup()
 #ifdef USE_SRV_SNS_SOIL_MOIST
     xTaskCreate(srv_sns_soil_moist_task, "srv_sns_soil_moist_task", 1024, NULL, 1, NULL);
 #endif
-#ifdef USE_SRV_SNS_PRESS
-    xTaskCreate(srv_sns_press_task, "srv_sns_press_task", 1024, NULL, 1, NULL);
+#ifdef USE_SRV_SNS_AIR_PRESS
+    xTaskCreate(srv_sns_air_press_task, "srv_sns_air_press_task", 1024, NULL, 1, NULL);
 #endif
 #ifdef USE_SRV_SNS_AMB_LIGHT
-    xTaskCreate(srv_sns_AMB_LIGHT_task, "srv_sns_AMB_LIGHT_task", 1024, NULL, 1, NULL);
+    xTaskCreate(srv_sns_amb_light_task, "srv_sns_amb_light_task", 1024, NULL, 1, NULL);
 #endif
 //---------------------------------------------------------------------------------------------
 // Actuator modules
@@ -129,16 +129,16 @@ void srv_os_task_freertos_setup()
 //---------------------------------------------------------------------------------------------
 // ECU modules
 #ifdef USE_ED_DHT
-    xTaskCreate(ed_dht_task, "ed_dht_task", 2024, NULL, 1, NULL);
+    xTaskCreate(ed_dht_task, "ed_dht_task", 2048, NULL, 1, NULL);
 #endif
 #ifdef USE_ed_sns_soil_moist
     xTaskCreate(ed_sns_soil_moist_task, "ed_sns_soil_moist_task", 1024, NULL, 1, NULL);
 #endif
 #ifdef USE_ED_BMP
-    xTaskCreate(ed_bmp_task, "ed_bmp_task", 1024, NULL, 1, NULL);
+    xTaskCreate(ed_bmp_task, "ed_bmp_task", 4096, NULL, 1, NULL);
 #endif
 #ifdef USE_ED_BH1750
-    xTaskCreate(ed_bh1750_task, "ed_bh1750_task", 2024, NULL, 1, NULL);
+    xTaskCreate(ed_bh1750_task, "ed_bh1750_task", 2048, NULL, 1, NULL);
 #endif
 
 #ifdef USE_ED_RELAY
@@ -223,17 +223,17 @@ void ctrl_soil_moist_task(void *pvParameters)
 
 //-----------------------------------------------------------------------------
 // Task for pressure control with isolation
-#ifdef USE_CTRL_PRESS_ISOL
-void ctrl_press_isol_task(void *pvParameters)
+#ifdef USE_CTRL_AIR_PRESS
+void ctrl_air_press_task(void *pvParameters)
 {
-    ctrl_press_isol_setup();
-    vTaskDelay(CTRL_PRESS_ISOL_OFFSET / portTICK_PERIOD_MS);
+    ctrl_air_press_setup();
+    vTaskDelay(CTRL_AIR_PRESS_OFFSET / portTICK_PERIOD_MS);
     TickType_t xLastWakeTime = xTaskGetTickCount();
 
     for (;;)
     {
-        ctrl_press_isol_loop();
-        vTaskDelayUntil(&xLastWakeTime, CTRL_PRESS_ISOL_REC / portTICK_PERIOD_MS);
+        ctrl_air_press_loop();
+        vTaskDelayUntil(&xLastWakeTime, CTRL_AIR_PRESS_REC / portTICK_PERIOD_MS);
     }
 }
 #endif
@@ -383,17 +383,17 @@ void srv_sns_soil_moist_task(void *pvParameters)
 
 //-----------------------------------------------------------------------------
 // Task for collecting data from the pressure sensor
-#ifdef USE_SRV_SNS_PRESS
-void srv_sns_press_task(void *pvParameters)
+#ifdef USE_SRV_SNS_AIR_PRESS
+void srv_sns_air_press_task(void *pvParameters)
 {
-    srv_sns_press_setup();
-    vTaskDelay(SRV_SNS_PRESS_OFFSET / portTICK_PERIOD_MS);
+    srv_sns_air_press_setup();
+    vTaskDelay(SRV_SNS_AIR_PRESS_OFFSET / portTICK_PERIOD_MS);
     TickType_t xLastWakeTime = xTaskGetTickCount();
 
     for (;;)
     {
-        srv_sns_press_loop();
-        vTaskDelayUntil(&xLastWakeTime, SRV_SNS_PRESS_REC / portTICK_PERIOD_MS);
+        srv_sns_air_press_loop();
+        vTaskDelayUntil(&xLastWakeTime, SRV_SNS_AIR_PRESS_REC / portTICK_PERIOD_MS);
     }
 }
 #endif
@@ -401,7 +401,7 @@ void srv_sns_press_task(void *pvParameters)
 //-----------------------------------------------------------------------------
 // Task for collecting data from the ambient light sensor
 #ifdef USE_SRV_SNS_AMB_LIGHT
-void srv_sns_AMB_LIGHT_task(void *pvParameters)
+void srv_sns_amb_light_task(void *pvParameters)
 {
     srv_sns_amb_light_setup();
     vTaskDelay(SRV_SNS_AMB_LIGHT_OFFSET / portTICK_PERIOD_MS);
@@ -485,6 +485,42 @@ void dd_valve_task(void *pvParameters)
     }
 }
 #endif
+
+//-----------------------------------------------------------------------------
+// Task for managing the water pump
+#ifdef USE_DD_WATER_PUMP
+void dd_water_pump_task(void *pvParameters)
+{
+    dd_water_pump_setup();
+    vTaskDelay(DD_WATER_PUMP_OFFSET / portTICK_PERIOD_MS);
+    TickType_t xLastWakeTime = xTaskGetTickCount();
+
+    for (;;)
+    {
+        dd_water_pump_loop();
+        vTaskDelayUntil(&xLastWakeTime, DD_WATER_PUMP_REC / portTICK_PERIOD_MS);
+    }
+}
+#endif
+
+//-----------------------------------------------------------------------------
+// Task for managing the air pump
+#ifdef USE_DD_AIR_PUMP
+void dd_air_pump_task(void *pvParameters)
+{
+    dd_air_pump_setup();
+    vTaskDelay(DD_AIR_PUMP_OFFSET / portTICK_PERIOD_MS);
+    TickType_t xLastWakeTime = xTaskGetTickCount();
+
+    for (;;)
+    {
+        dd_air_pump_loop();
+        vTaskDelayUntil(&xLastWakeTime, DD_AIR_PUMP_REC / portTICK_PERIOD_MS);
+    }
+}
+#endif
+
+
 
 
 //=============================================================================

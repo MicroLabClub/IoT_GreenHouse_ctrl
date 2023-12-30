@@ -15,13 +15,13 @@
 #include "ctrl_temp_heat/ctrl_temp_heat.h"
 #endif
 #ifdef USE_CTRL_AIR_HUM
-#include "ctrl_air_humidity/ctrl_air_humidity.h"
+#include "ctrl_air_hum/ctrl_air_hum.h"
 #endif
 #ifdef USE_CTRL_SOIL_MOIST
 #include "ctrl_soil_moisture/ctrl_soil_moisture.h"
 #endif
-#ifdef USE_CTRL_PRESS_ISOL
-#include "ctrl_press_isol/ctrl_press_isol.h"
+#ifdef USE_CTRL_AIR_PRESS
+#include "ctrl_air_press/ctrl_air_press.h"
 #endif
 #ifdef USE_CTRL_LIGHTS
 #include "ctrl_lights/ctrl_lights.h"
@@ -60,6 +60,10 @@
 //-----------------------------------------------------------------------------
 #ifdef USE_SRV_SNS_SOIL_MOIST
 #include "srv_sns_soil_moist/srv_sns_soil_moist.h"
+#endif
+//-----------------------------------------------------------------------------
+#ifdef USE_SRV_SNS_AIR_PRESS
+#include "srv_sns_air_press/srv_sns_air_press.h"
 #endif
 //-----------------------------------------------------------------------------
 #ifdef USE_SRV_SNS_AMB_LIGHT

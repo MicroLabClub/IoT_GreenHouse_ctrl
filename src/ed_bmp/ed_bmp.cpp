@@ -1,3 +1,4 @@
+#include "ed_bmp.h"
 #include "Arduino.h"
 #include <Adafruit_BMP085.h>
 
@@ -36,19 +37,19 @@ float ed_bmp_get_temperature(void)
   return ed_bmp_temperature;
 }
 
-float ed_bmp_GetPressure(void)
+float ed_bmp_get_pressure(void)
 {
   return ed_bmp_pressure;
 }
 
-int ed_bmp_GetSensorError(void)
+int ed_bmp_get_sensor_error(void)
 {
   return ed_bmp_sensor_error;
 }
 
 void ed_bmp_setup()
 {
-  Serial.begin(9600);
+  // Serial.begin(9600);
   //  Initialize device.
   if (!bmp.begin())
   {
@@ -67,10 +68,10 @@ void ed_bmp_loop()
     // Serial.print(ed_bmp_temperature);
     // Serial.println(" *C");
 
-    ed_bmp_pressure = bmp.readPressure();
+    ed_bmp_pressure = (float)bmp.readPressure()*PAS_TO_BAR;
     // Serial.print("ED BMP: Pressure = ");
     // Serial.print(ed_bmp_pressure);
-    // Serial.println(" Pa");
+    // Serial.println(" Bar");
 
     // Serial.println();
   }

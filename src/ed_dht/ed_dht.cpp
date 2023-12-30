@@ -51,7 +51,7 @@ int ed_dht_get_temperature_error(void)
   return ed_dht_temperature_error;
 }
 
-int ed_dht_get_humidityError(void)
+int  ed_dht_get_humidity_error(void)
 {
   return ed_dht_humidity_error;
 }

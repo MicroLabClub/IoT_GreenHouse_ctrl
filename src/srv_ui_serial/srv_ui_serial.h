@@ -7,8 +7,12 @@ void srv_ui_serial_out_loop();
 
 void dd_window_report();
 void ed_relay_report();
+void dd_heater_report();
+
 void srv_sns_air_temp_report();
-void ed_dht_report();
+void srv_sns_soil_moist_report();
+void srv_sns_amb_light_report();
+
 void ctrl_temp_vent_report();
 void ctrl_temp_heat_report();
 void ctrl_lights_report();

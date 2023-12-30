@@ -41,7 +41,7 @@ float srv_sns_air_hum_cond(float temp);
 void srv_sns_air_hum_loop()
 {
 
-  if (ed_dht_get_humidityError())
+  if ( ed_dht_get_humidity_error())
   {
     // Serial.println(F("SRV SNS Error reading humidity!"));
     srv_sns_air_humidity_error = 1;

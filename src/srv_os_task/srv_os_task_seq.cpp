@@ -22,8 +22,8 @@ int ctrl_temp_heat_rec_cnt = CTRL_TEMP_HEAT_OFFSET;
 int ctrl_lights_rec_cnt = CTRL_LIGHTS_OFFSET;
 #endif
 
-#ifdef USE_CTRL_PRESS_ISOL
-int ctrl_press_isol_rec_cnt = CTRL_PRESS_ISOL_OFFSET;
+#ifdef USE_CTRL_AIR_PRESS
+int ctrl_air_press_rec_cnt = CTRL_AIR_PRESS_OFFSET;
 #endif
 
 #ifdef USE_CTRL_AIR_HUM
@@ -151,8 +151,8 @@ void srv_os_task_seq_setup()
 #ifdef USE_CTRL_LIGHTS
   ctrl_lights_setup();
 #endif
-#ifdef USE_CTRL_PRESS_ISOL
-  ctrl_press_isol_setup();
+#ifdef USE_CTRL_AIR_PRESS
+  ctrl_air_press_setup();
 #endif
 #ifdef USE_CTRL_SOIL_MOIST
   ctrl_soil_moist_setup();
@@ -339,12 +339,12 @@ void srv_os_task_seq_scheduler()
     ctrl_lights_rec_cnt = CTRL_LIGHTS_REC;
   }
 #endif
-#ifdef USE_CTRL_PRESS_ISOL
+#ifdef USE_CTRL_AIR_PRESS
   // Task for pressure control with isolation
-  if (--ctrl_press_isol_rec_cnt <= 0)
+  if (--ctrl_air_press_rec_cnt <= 0)
   {
-    ctrl_press_isol_loop();
-    ctrl_press_isol_rec_cnt = CTRL_PRESS_ISOL_REC;
+    ctrl_air_press_loop();
+    ctrl_air_press_rec_cnt = CTRL_AIR_PRESS_REC;
   }
 #endif
 #ifdef USE_CTRL_AIR_HUM

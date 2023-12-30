@@ -1,5 +1,5 @@
-#ifndef CTRL_AIR_HUMIDITY_H_
-#define CTRL_AIR_HUMIDITY_H_
+#ifndef CTRL_AIR_HUM_H_
+#define CTRL_AIR_HUM_H_
 
 #include "ecu_config.h"
 
