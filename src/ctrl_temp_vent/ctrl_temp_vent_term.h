@@ -1,5 +1,5 @@
-#ifndef ED_DHT_TERM_H
-#define ED_DHT_TERM_H
+#ifndef CTRL_TEMP_VENT_TERM_H
+#define CTRL_TEMP_VENT_TERM_H
 
 // Include any necessary libraries or headers
 #include "ecu_config.h"
@@ -7,6 +7,6 @@
 // Define any constants or macros
 
 // Declare any function prototypes
-void ed_dht_report();
+void ctrl_temp_vent_report();
 
-#endif // ED_DHT_TERM_H
+#endif // CTRL_TEMP_VENT_TERM_H

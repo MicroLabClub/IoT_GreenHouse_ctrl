@@ -114,7 +114,7 @@ void ctrl_lights_loop()
       dd_lights_off();
     }
   }
-  if (dd_lights_get_gtate() == DD_LIGHTS_ON)
+  if (dd_lights_get_state() == DD_LIGHTS_ON)
   {
     ctrl_lights_output = CTRL_LIGHTS_OUT_ON;
   }

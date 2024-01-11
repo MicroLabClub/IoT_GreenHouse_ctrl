@@ -20,8 +20,9 @@ void ed_relay_setup()
     {
         int relay_pin = ed_relay_pin[relay_it];
         if(relay_pin < 0) continue;
-        pinMode(relay_pin, OUTPUT);
         ed_relay_off(relay_it);
+        pinMode(relay_pin, OUTPUT);
+        digitalWrite(relay_pin, ED_RELAY_OFF);
     }
 }
 

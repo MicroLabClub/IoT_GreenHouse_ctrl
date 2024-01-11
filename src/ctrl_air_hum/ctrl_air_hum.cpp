@@ -86,7 +86,7 @@ void ctrl_air_hum_loop()
 {
   if (ctrl_air_hum_mode == CTRL_AIR_HUM_ENABLE)
   {
-    if (srv_sns_air_get_humidityError() == 0)
+    if (srv_sns_air_get_humidity_error() == 0)
     {
       float hum_current = srv_sns_air_get_humidity();
       int hum_off = ctrl_air_hum_setpoint + CTRL_AIR_HUM_HISTERESIS;
@@ -111,7 +111,7 @@ void ctrl_air_hum_loop()
       dd_valve_off();
     }
   }
-  if(dd_valve_get_state() == DD_VALVE_ON)
+  if(dd_valve_get_state() == DD_VALVE_OPEN)
   {
     ctrl_air_hum_output = CTRL_AIR_HUM_OUT_ON;
   }

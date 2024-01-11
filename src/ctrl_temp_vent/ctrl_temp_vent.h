@@ -19,6 +19,13 @@
 #define CTRL_TEMP_VENT_DISABLE 0
 #define CTRL_TEMP_VENT_ENABLE 1
 
+enum ctrl_temp_vent_out_state_t{
+    CTRL_TEMP_VENT_OUT_STOP,
+    CTRL_TEMP_VENT_OUT_CLOSE,
+    CTRL_TEMP_VENT_OUT_OPEN,
+    CTRL_TEMP_VENT_OUT_UNKNOWN = -1
+};
+
 
 void ctrl_temp_vent_setup();
 void ctrl_temp_vent_loop();

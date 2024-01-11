@@ -146,11 +146,11 @@ void callback(char *topic, byte *payload, unsigned int length)
   else if (strcmp(cmd, "ctrl_mode") == 0)
   {
     int mode = value_f;
-    if (mode == 0)
+    if (mode == CTRL_SOIL_MOIST_DISABLE)
     {
       ctrl_soil_moist_set_mode_manual();
     }
-    else if (mode == 1)
+    else if (mode == CTRL_SOIL_MOIST_ENABLE)
     {
       ctrl_soil_moist_set_mode_auto();
     }

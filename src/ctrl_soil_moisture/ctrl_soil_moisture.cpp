@@ -112,7 +112,7 @@ void ctrl_soil_moist_loop()
       dd_valve_off();
     }
   }
-  if (dd_valve_get_state() == DD_VALVE_ON)
+  if (dd_valve_get_state() == DD_VALVE_OPEN)
   {
     ctrl_soil_moist_output = CTRL_SOIL_MOIST_OUT_ON;
   }

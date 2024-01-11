@@ -20,7 +20,7 @@ int dd_lights_set_state( int state)
     return dd_lights_state;
 }
 
-int dd_lights_get_gtate()
+int dd_lights_get_state()
 {
     return dd_lights_state;
 }

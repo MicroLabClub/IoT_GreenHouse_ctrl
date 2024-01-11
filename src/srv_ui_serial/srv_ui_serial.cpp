@@ -5,16 +5,63 @@
 #include "ecu_config.h"
 #include "ecu_modules.h"
 
-#ifdef USE_CTRL_AIR_PRESS
-#include "ctrl_air_press/ctrl_air_press_term.h"
+//-----------------------------------------------
+// include Control components reports
+#ifdef USE_CTRL_TEMP_HEAT
+#include "ctrl_temp_heat/ctrl_temp_heat_term.h"
+#endif
+#ifdef USE_CTRL_TEMP_VENT
+#include "ctrl_temp_vent/ctrl_temp_vent_term.h"
 #endif
 #ifdef USE_CTRL_AIR_HUM
 #include "ctrl_air_hum/ctrl_air_hum_term.h"
 #endif
+#ifdef USE_CTRL_SOIL_MOIST
+#include "ctrl_soil_moisture/ctrl_soil_moisture_term.h"
+#endif
+#ifdef USE_CTRL_AIR_PRESS
+#include "ctrl_air_press/ctrl_air_press_term.h"
+#endif
+#ifdef USE_CTRL_LIGHTS
+#include "ctrl_lights/ctrl_lights_term.h"
+#endif
 
+//-----------------------------------------------
+// include Sensor components reports
 #ifdef USE_SRV_SNS_AIR_PRESS
 #include "srv_sns_air_press/srv_sns_air_press_term.h"
 #endif
+#ifdef USE_SRV_SNS_AIR_TEMP
+#include "srv_sns_air_temp/srv_sns_air_temp_term.h"
+#endif
+#ifdef USE_SRV_SNS_SOIL_MOIST
+#include "srv_sns_soil_moist/srv_sns_soil_moist_term.h"
+#endif
+#ifdef USE_SRV_SNS_AIR_HUM
+#include "srv_sns_air_hum/srv_sns_air_hum_term.h"
+#endif
+#ifdef USE_SRV_SNS_LIGHT
+#include "srv_sns_amb_light/srv_sns_amb_light_term.h"
+#endif
+
+//-----------------------------------------------
+// include Actuator components reports
+#ifdef USE_DD_WINDOW
+#include "dd_window/dd_window_term.h"
+#endif
+#ifdef USE_DD_HEATER
+#include "dd_heater/dd_heater_term.h"
+#endif
+#ifdef USE_DD_VALVE
+#include "dd_valve/dd_valve_term.h"
+#endif
+#ifdef USE_DD_AIR_PUMP
+#include "dd_air_pump/dd_air_pump_term.h"
+#endif
+#ifdef USE_DD_LIGHTS
+#include "dd_lights/dd_lights_term.h"
+#endif
+
 
 //-----------------------------------------------
 // include ECU report components
@@ -27,6 +74,13 @@
 #ifdef USE_ED_BH1750
 #include "ed_bh1750/ed_bh1750_term.h"
 #endif
+#ifdef USE_ED_SNS_MOIST
+#include "ed_sns_soil_moist/ed_sns_soil_moist_term.h"
+#endif
+#ifdef USE_ED_RELAY
+#include "ed_relay/ed_relay_term.h"
+#endif
+
 
 
 
@@ -510,7 +564,7 @@ void srv_ui_serial_out_loop()
   ctrl_air_hum_report();
 #endif
 #ifdef USE_CTRL_SOIL_MOIST
-  // ctrl_soil_moist_report();
+  ctrl_soil_moist_report();
 #endif
 #ifdef USE_CTRL_AIR_PRESS
   ctrl_air_press_report();
@@ -528,7 +582,7 @@ void srv_ui_serial_out_loop()
   srv_sns_air_hum_report();
 #endif
 #ifdef USE_SRV_SNS_SOIL_MOIST
-  // srv_sns_soil_moist_report();
+  srv_sns_soil_moist_report();
 #endif
 #ifdef USE_SRV_SNS_AIR_PRESS
   srv_sns_air_press_report();
@@ -546,13 +600,13 @@ void srv_ui_serial_out_loop()
   dd_heater_report();
 #endif
 #ifdef USE_DD_VALVE
-  // dd_valve_report();
+  dd_valve_report();
 #endif
 #ifdef USE_DD_AIR_PUMP
-  // dd_air_pump_report();
+  dd_air_pump_report();
 #endif
 #ifdef USE_DD_LIGHTS
-  // dd_lights_report();
+  dd_lights_report();
 #endif
 
 //-----------------------------------------------
@@ -561,7 +615,7 @@ void srv_ui_serial_out_loop()
   ed_dht_report();
 #endif
 #ifdef USE_ED_SNS_MOIST
-  // ed_sns_moist_report();
+  ed_sns_soil_moist_report();
 #endif
 #ifdef USE_ED_BMP
   ed_bmp_report();
@@ -577,244 +631,107 @@ void srv_ui_serial_out_loop()
   Serial.println();
 }
 
-void ctrl_temp_vent_report()
-{
-#ifdef USE_CTRL_TEMP_VENT
+// void ctrl_temp_vent_report()
+// {
+// #ifdef USE_CTRL_TEMP_VENT
 
-  if (ctrl_temp_vent_is_enabled())
-  {
-    Serial.print(F("CTRL_VENT: Mode AUTO-"));
-  }
-  else
-  {
-    Serial.print(F("CTRL_VENT: Mode MANUAL-"));
-  }
-  Serial.println(CTRL_TEMP_VENT_REC);
+//   if (ctrl_temp_vent_is_enabled())
+//   {
+//     Serial.print(F("CTRL_VENT: Mode AUTO-"));
+//   }
+//   else
+//   {
+//     Serial.print(F("CTRL_VENT: Mode MANUAL-"));
+//   }
+//   Serial.println(CTRL_TEMP_VENT_REC);
 
-  float temp_setpoint = ctrl_temp_vent_get_setpoint();
-  Serial.print(F("CTRL_VENT: SP: "));
-  Serial.print(temp_setpoint);
-  Serial.print(F("°C "));
+//   float temp_setpoint = ctrl_temp_vent_get_setpoint();
+//   Serial.print(F("CTRL_VENT: SP: "));
+//   Serial.print(temp_setpoint);
+//   Serial.print(F("°C "));
 
-  Serial.print(F("HIST[OP: "));
-  Serial.print(temp_setpoint + CTRL_TEMP_VENT_HISTERESIS);
-  Serial.print(F("°C  "));
+//   Serial.print(F("HIST[OP: "));
+//   Serial.print(temp_setpoint + CTRL_TEMP_VENT_HISTERESIS);
+//   Serial.print(F("°C  "));
 
-  Serial.print(F("CL: "));
-  Serial.print(temp_setpoint - CTRL_TEMP_VENT_HISTERESIS);
-  Serial.print(F("°C] "));
+//   Serial.print(F("CL: "));
+//   Serial.print(temp_setpoint - CTRL_TEMP_VENT_HISTERESIS);
+//   Serial.print(F("°C] "));
 
-  float temp_current = ctrl_temp_vent_get_current_temp();
-  Serial.print(F("CTRL_VENT: Cur: "));
-  Serial.print(temp_current);
-  Serial.println(F("°C"));
+//   float temp_current = ctrl_temp_vent_get_current_temp();
+//   Serial.print(F("CTRL_VENT: Cur: "));
+//   Serial.print(temp_current);
+//   Serial.println(F("°C"));
 
-#endif
-}
+// #endif
+// }
 
-void ctrl_temp_heat_report()
-{
-#ifdef USE_CTRL_TEMP_HEAT
+// void ctrl_temp_heat_report()
+// {
+// #ifdef USE_CTRL_TEMP_HEAT
 
-  if (ctrl_temp_heat_is_enabled())
-  {
-    Serial.print(F("CTRL_VENT: Mode AUTO-"));
-  }
-  else
-  {
-    Serial.print(F("CTRL_VENT: Mode MANUAL-"));
-  }
-  Serial.print(CTRL_TEMP_HEAT_REC);
+//   if (ctrl_temp_heat_is_enabled())
+//   {
+//     Serial.print(F("CTRL_VENT: Mode AUTO-"));
+//   }
+//   else
+//   {
+//     Serial.print(F("CTRL_VENT: Mode MANUAL-"));
+//   }
+//   Serial.print(CTRL_TEMP_HEAT_REC);
 
-  float temp_setpoint = ctrl_temp_heat_get_setpoint();
-  Serial.print(F(" : SP: "));
-  Serial.print(temp_setpoint);
-  Serial.print(F("°C "));
+//   float temp_setpoint = ctrl_temp_heat_get_setpoint();
+//   Serial.print(F(" : SP: "));
+//   Serial.print(temp_setpoint);
+//   Serial.print(F("°C "));
 
-  Serial.print(F("HIST[OP: "));
-  Serial.print(temp_setpoint + CTRL_TEMP_HEAT_HISTERESIS);
-  Serial.print(F("°C  "));
+//   Serial.print(F("HIST[OP: "));
+//   Serial.print(temp_setpoint + CTRL_TEMP_HEAT_HISTERESIS);
+//   Serial.print(F("°C  "));
 
-  Serial.print(F("CL: "));
-  Serial.print(temp_setpoint - CTRL_TEMP_HEAT_HISTERESIS);
-  Serial.print(F("°C] "));
+//   Serial.print(F("CL: "));
+//   Serial.print(temp_setpoint - CTRL_TEMP_HEAT_HISTERESIS);
+//   Serial.print(F("°C] "));
 
-  float temp_current = ctrl_temp_heat_get_current_temp();
-  Serial.print(F("  Cur: "));
-  Serial.print(temp_current);
-  Serial.println(F("°C"));
+//   float temp_current = ctrl_temp_heat_get_current_temp();
+//   Serial.print(F("  Cur: "));
+//   Serial.print(temp_current);
+//   Serial.println(F("°C"));
 
-#endif
-}
-
-void ctrl_lights_report()
-{
-#ifdef USE_CTRL_LIGHTS
-  Serial.print(F("CTRL_LIGHTS "));
-  Serial.print(CTRL_LIGHTS_REC);
-
-  if (ctrl_lights_is_enabled())
-  {
-    Serial.print(F(" : AUTO "));
-  }
-  else
-  {
-    Serial.print(F(": MANUAL "));
-  }
-
-  float light_current = ctrl_lights_get_current_light();
-  Serial.print(F(": Cur: "));
-  Serial.print(light_current);
-  Serial.print(F(" lx"));
-
-  float light_setpoint = ctrl_lights_get_setpoint();
-  Serial.print(F(": SP: "));
-  Serial.print(light_setpoint);
-  Serial.print(F(" lx "));
-
-  Serial.print(F("HIST[OP: "));
-  Serial.print(light_setpoint + CTRL_LIGHTS_HISTERESIS);
-  Serial.print(F(" lx  "));
-
-  Serial.print(F("CL: "));
-  Serial.print(light_setpoint - CTRL_LIGHTS_HISTERESIS);
-  Serial.print(F(" lx] "));
-
-  Serial.println();
-
-#endif
-}
-
-void ed_relay_report()
-{
-#ifdef USE_ED_RELAY
-
-  // Relay Report
-  Serial.print("ED_RELAY: Relay ");
-  for (size_t relay_it = 0; relay_it < ED_RELAY_NR_OF; relay_it++)
-  {
-    /* code */
-    int relay_state = ed_relay_getState(relay_it);
-    int relay_pin = ed_relay_get_pin(relay_it);
-    Serial.print(" [");
-    Serial.print(relay_it);
-    Serial.print(":");
-    Serial.print(relay_pin);
-    Serial.print("]-");
-    if (relay_state == ED_RELAY_ON)
-    {
-      Serial.print("ON");
-    }
-    else
-    {
-      Serial.print("OFF");
-    }
-  }
-  Serial.println();
-#endif
-}
-
-void dd_window_report()
-{
-#ifdef USE_DD_WINDOW
-
-  // Window Report
-
-  int window_state = dd_window_get_state();
-  Serial.print("DD_WINDOW: Windoe ");
-  Serial.print(window_state);
-  Serial.print(" - ");
-
-  if (window_state == DD_WINDOW_STOP)
-  {
-    Serial.println(" STOP");
-  }
-  else if (window_state == DD_WINDOW_CLOSE)
-  {
-    Serial.println(" CLOSE");
-  }
-  else if (window_state == DD_WINDOW_OPEN)
-  {
-    Serial.println(" OPRN");
-  }
-  else
-  {
-    Serial.println(" UNDEFINED");
-  }
-#endif
-}
+// #endif
+// }
 
 
 
-//----------------------------------------------------------
-// Ambient Temperature sensor service report
-//----------------------------------------------------------
-void srv_sns_air_temp_report()
-{
-#ifdef USE_SRV_SNS_AIR_TEMP
-  float temp = srv_sns_air_get_temperature();
-  Serial.print(F("SRV_SNS_AIR_TEMP: Temperature: "));
-  Serial.print(temp);
-  Serial.println(F("°C"));
-#endif
-}
+// void ctrl_temp_heat_report()
+// {
+// #ifdef USE_CTRL_TEMP_HEAT
+//   if (ctrl_temp_heat_is_enabled())
+//   {
+//     Serial.println(F("CTRL_HEAT: Mode AUTO "));
+//   }
+//   else
+//   {
+//     Serial.println(F("CTRL_HEAT: Mode MANUAL"));
+//   }
 
+//   float temp_setpoint = ctrl_temp_heat_get_setpoint();
+//   Serial.print(F("CTRL_HEAT: SP: "));
+//   Serial.print(temp_setpoint);
+//   Serial.print(F("°C "));
 
+//   Serial.print(F("HIST[OP: "));
+//   Serial.print(temp_setpoint + CTRL_TEMP_HEAT_HISTERESIS);
+//   Serial.print(F("°C  "));
 
+//   Serial.print(F("CL: "));
+//   Serial.print(temp_setpoint - CTRL_TEMP_HEAT_HISTERESIS);
+//   Serial.print(F("°C] "));
 
-void srv_ui_serial_ctrl_temp_heat_report()
-{
-#ifdef USE_CTRL_TEMP_HEAT
-  if (ctrl_temp_heat_is_enabled())
-  {
-    Serial.println(F("CTRL_HEAT: Mode AUTO "));
-  }
-  else
-  {
-    Serial.println(F("CTRL_HEAT: Mode MANUAL"));
-  }
+//   float temp_current = ctrl_temp_heat_get_current_temp();
+//   Serial.print(F("CTRL_HEAT: Cur: "));
+//   Serial.print(temp_current);
+//   Serial.println(F("°C"));
+// #endif
+// }
 
-  float temp_setpoint = ctrl_temp_heat_get_setpoint();
-  Serial.print(F("CTRL_HEAT: SP: "));
-  Serial.print(temp_setpoint);
-  Serial.print(F("°C "));
-
-  Serial.print(F("HIST[OP: "));
-  Serial.print(temp_setpoint + CTRL_TEMP_HEAT_HISTERESIS);
-  Serial.print(F("°C  "));
-
-  Serial.print(F("CL: "));
-  Serial.print(temp_setpoint - CTRL_TEMP_HEAT_HISTERESIS);
-  Serial.print(F("°C] "));
-
-  float temp_current = ctrl_temp_heat_get_current_temp();
-  Serial.print(F("CTRL_HEAT: Cur: "));
-  Serial.print(temp_current);
-  Serial.println(F("°C"));
-#endif
-}
-
-
-
-void srv_ui_serial_dd_heater_report()
-{ // Heater Report
-#ifdef USE_DD_HEATER
-  int heater_state = dd_heater_get_state();
-  Serial.print(F("DD_HEATER: Heater "));
-  Serial.print(heater_state);
-  Serial.print(F(" - "));
-
-  if (heater_state == DD_HEATER_OFF)
-  {
-    Serial.println(F(" STOP"));
-  }
-  else if (heater_state == DD_HEATER_ON)
-  {
-    Serial.println(F(" ON"));
-  }
-  else
-  {
-    Serial.println(F(" UNDEFINED"));
-  }
-#endif
-}

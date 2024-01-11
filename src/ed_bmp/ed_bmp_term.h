@@ -6,7 +6,7 @@
 
 // Define any constants or macros
 
-// Declare any function prototypes or class declarations
+// Declare any function prototypes
 void ed_bmp_report();
 
 #endif // ED_BMP_TERM_H

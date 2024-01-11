@@ -113,6 +113,23 @@ void ctrl_temp_vent_loop()
       dd_window_stop();
     }
   }
-  ctrl_temp_vent_output = dd_window_get_state();
+
+  int dd_window_state = dd_window_get_state();
+  if(dd_window_state == DD_WINDOW_OPEN)
+  {
+    ctrl_temp_vent_output = CTRL_TEMP_VENT_OUT_OPEN;
+  }
+  else if(dd_window_state == DD_WINDOW_CLOSE)
+  {
+    ctrl_temp_vent_output = CTRL_TEMP_VENT_OUT_CLOSE;
+  }
+  else if(dd_window_state == DD_WINDOW_STOP)
+  {
+    ctrl_temp_vent_output = CTRL_TEMP_VENT_OUT_STOP;
+  }
+  else if(dd_window_state == DD_WINDOW_UNKNOWN)
+  {
+    ctrl_temp_vent_output = CTRL_TEMP_VENT_OUT_UNKNOWN;
+  }
 
 }

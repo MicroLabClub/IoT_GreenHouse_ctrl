@@ -1,5 +1,6 @@
 #include "ed_servo.h"
-#include <Servo.h>
+// #include <Servo.h>
+#include <ESP32Servo.h>
 #include "Arduino.h"
 
 Servo myservo; // create servo object to control a servo

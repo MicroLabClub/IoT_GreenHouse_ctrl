@@ -13,7 +13,7 @@ float srv_sns_air_get_humidity(void)
 }
 
 
-int srv_sns_air_get_humidityError(void)
+int srv_sns_air_get_humidity_error(void)
 {
   return srv_sns_air_humidity_error;
 }

@@ -21,7 +21,6 @@
 #endif
 
 #ifndef DD_AIR_PRESS_OP_D_TIME
-#define DD_AIR_PRESS_OP_D_TIME 10
 #endif
 
 #define CTRL_AIR_PRESS_OUT_OFF 0
