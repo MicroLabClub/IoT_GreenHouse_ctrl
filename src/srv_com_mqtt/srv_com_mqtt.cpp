@@ -109,6 +109,8 @@ void setupMQTT()
 
 void callback(char *topic, byte *payload, unsigned int length)
 {
+
+
   Serial.println();
   Serial.println("MQTT Callback ");
   Serial.print("Topic:");
@@ -139,6 +141,13 @@ void callback(char *topic, byte *payload, unsigned int length)
   Serial.print("Value_f:");
   Serial.println(value_f);
 
+  // subscribe message example
+  // {
+  // "cmd":"set_point",
+  // "value":"17.3"
+  // }
+
+
   if (strcmp(cmd, "set_point") == 0)
   {
     ctrl_soil_moist_set_setpoint(value_f);
@@ -154,16 +163,17 @@ void callback(char *topic, byte *payload, unsigned int length)
     {
       ctrl_soil_moist_set_mode_auto();
     }
-  } else if (strcmp(cmd, "ctrl_out") == 0)
+  }
+  else if (strcmp(cmd, "ctrl_out") == 0)
   {
     int out = value_f;
     if (out == CTRL_SOIL_MOIST_OUT_OFF)
     {
-        dd_valve_off();
+      dd_valve_off();
     }
     else if (out == CTRL_SOIL_MOIST_OUT_ON)
     {
-        dd_valve_on(CTRL_SOIL_MOIST_OP_D_TIME);
+      dd_valve_on(CTRL_SOIL_MOIST_OP_D_TIME);
     }
   }
 
@@ -184,8 +194,25 @@ void reconnect()
     if (mqttClient.connect(clientId.c_str(), mqtt_username, mqtt_password))
     {
       Serial.println("Connected to MQTT broker.");
-      // subscribe to topic
-      mqttClient.subscribe("microlab/agro/device/watervalve/settings");
+// subscribe to topic
+#ifdef USE_CTRL_TEMP_VENT
+      mqttClient.subscribe("microlab/agro/green_house/temp_vent_ctrl");
+#endif
+#ifdef USE_CTRL_TEMP_HEAT
+      mqttClient.subscribe("microlab/agro/green_house/temp_heat_ctrl");
+#endif
+#ifdef USE_CTRL_AIR_HUM
+      mqttClient.subscribe("microlab/agro/green_house/air_hum_ctrl");
+#endif
+#ifdef USE_CTRL_SOIL_MOIST
+      mqttClient.subscribe("microlab/agro/green_house/soil_moist_ctrl");
+#endif
+#ifdef USE_CTRL_AIR_PRESS
+      mqttClient.subscribe("microlab/agro/green_house/air_press_ctrl");
+#endif
+#ifdef USE_CTRL_LIGHTS
+      mqttClient.subscribe("microlab/agro/green_house/light_ctrl");
+#endif
     }
   }
 }
