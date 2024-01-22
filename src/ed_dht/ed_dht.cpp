@@ -103,7 +103,7 @@ void ed_dht_loop()
   {
     ed_dht_temperature_error = 1;
 
-    Serial.println(F("ED DHT Error reading temperature!"));
+    // Serial.println(F("ED DHT Error reading temperature!"));
   }
   else
   {
@@ -121,7 +121,7 @@ void ed_dht_loop()
   {
     ed_dht_humidity_error = 1;
     
-    Serial.println(F("ED DHT Error reading humidity!"));
+    // Serial.println(F("ED DHT Error reading humidity!"));
   }
   else
   {

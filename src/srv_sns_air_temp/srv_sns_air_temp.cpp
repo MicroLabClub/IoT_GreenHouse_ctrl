@@ -3,25 +3,29 @@
 #include "../lib_cond/lib_cond.h"
 #include "Arduino.h"
 
+
+
 float srv_sns_air_temperature = 19.0;
 int srv_sns_air_temperature_error = 0;
-
+int srv_sns_air_temperature_error_sym = 0;
+int srv_sns_air_temperature_error_abc = 0;
+int srv_sns_air_temperature_error_abc_max = 5;
+int srv_sns_air_temperature_error_abc_min = 0;
+int srv_sns_air_temperature_error_abc_inc = 1;
+int srv_sns_air_temperature_error_abc_dec = 5;
 
 float srv_sns_air_get_temperature(void)
 {
   return srv_sns_air_temperature;
 }
 
-
 int srv_sns_air_get_temperature_error(void)
 {
   return srv_sns_air_temperature_error;
 }
 
-
 #define INPUT_BUFF_SIZE 8
 float srv_sns_air_temp_buff_in[INPUT_BUFF_SIZE];
-
 
 #define MEDIAN_BUFF_SIZE 5
 float srv_sns_air_temp_buff_med[MEDIAN_BUFF_SIZE];
@@ -32,8 +36,14 @@ float srv_sns_air_temp_weights_lpf[LPF_BUFF_SIZE] = {50, 25, 15, 10};
 
 void srv_sns_air_temp_setup()
 {
-  
-
+   srv_sns_air_temperature = 19.0;
+   srv_sns_air_temperature_error = 0;
+   srv_sns_air_temperature_error_sym = 0;
+   srv_sns_air_temperature_error_abc = 0;
+   srv_sns_air_temperature_error_abc_max = 100;
+   srv_sns_air_temperature_error_abc_min = 0;
+   srv_sns_air_temperature_error_abc_inc = 1;
+   srv_sns_air_temperature_error_abc_dec = 50;
 }
 
 float srv_sns_air_temp_cond(float temp);
@@ -44,11 +54,11 @@ void srv_sns_air_temp_loop()
   if (ed_dht_get_temperature_error())
   {
     // Serial.println(F("SRV SNS Error reading temperature!"));
-    srv_sns_air_temperature_error = 1;
+    srv_sns_air_temperature_error_sym = 1;
   }
   else
   {
-    srv_sns_air_temperature_error = 0;
+    srv_sns_air_temperature_error_sym = 0;
     float temp_raw = ed_dht_get_temperature();
 
     // Serial.print(F("SRV SNS Temperature: "));
@@ -58,6 +68,31 @@ void srv_sns_air_temp_loop()
     srv_sns_air_temperature = srv_sns_air_temp_cond(temp_raw);
   }
 
+  // error handling
+  if (srv_sns_air_temperature_error_sym)
+  {
+    if (srv_sns_air_temperature_error_abc < srv_sns_air_temperature_error_abc_max)
+    {
+      srv_sns_air_temperature_error_abc += srv_sns_air_temperature_error_abc_inc;
+    }
+    else
+    {
+      srv_sns_air_temperature_error_abc = srv_sns_air_temperature_error_abc_max;
+      srv_sns_air_temperature_error = 1;
+    }
+  }
+  else
+  {
+    if (srv_sns_air_temperature_error_abc > srv_sns_air_temperature_error_abc_min)
+    {
+      srv_sns_air_temperature_error_abc -= srv_sns_air_temperature_error_abc_dec;
+    }
+    else
+    {
+      srv_sns_air_temperature_error_abc = srv_sns_air_temperature_error_abc_min;
+      srv_sns_air_temperature_error = 0;
+    }
+  }
 }
 
 float srv_sns_air_temp_cond(float temp_raw)

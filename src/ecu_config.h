@@ -20,7 +20,7 @@
 
 //==============================================================================
 // Select configuration for ECU HERE !!
-#define ECU_CONFIG ECU_CTRL_SOIL_MOISTURE
+#define ECU_CONFIG ECU_CTRL_AIR_HUM  // <--- HERE
 //==============================================================================
 
 #if ECU_CONFIG == ECU_ALL
@@ -28,6 +28,7 @@
 #define USE_SRV_UI_SERIAL
 
 #elif ECU_CONFIG == ECU_CTRL_TEMP_VENT
+
 #include "ecu_config_ctrl_temp_vent.h"
 
 #elif ECU_CONFIG == ECU_CTRL_TEMP_HEAT

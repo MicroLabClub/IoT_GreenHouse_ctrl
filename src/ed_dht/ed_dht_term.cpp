@@ -22,10 +22,10 @@ void ed_dht_report()
     {
         Serial.print(F("N_OK"));
     }
-    Serial.println();
+    // Serial.println();
 
     float hum = ed_dht_get_humidity();
-    Serial.print(F("| Humidity: "));
+    Serial.print(F(" | Humidity: "));
     Serial.print(hum);
     Serial.print(F(" %"));
 
